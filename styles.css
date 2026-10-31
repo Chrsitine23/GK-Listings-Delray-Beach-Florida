@@ -2042,126 +2042,74 @@ img {
     color: #789096;
 }
 
-
 /* =========================================================
-   OPENING PAGE & DASHBOARD BACKGROUND
-   Desktop: Landscape image
-   Mobile: Portrait image
+   FULL-SCREEN BACKGROUND — OPENING & DASHBOARD
 ========================================================= */
 
-/* =========================================================
-   1. OPENING PAGE
-========================================================= */
-
+/* Opening page */
 #dashboard {
     position: relative;
     width: 100%;
     min-height: 100vh;
     min-height: 100dvh;
 
-    background-image: url("images/landscape.png") !important;
+    background-image: url("images/logo1.jpg") !important;
+    background-position: center center !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+
+/* Dashboard */
+#menu.dashboard-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto !important;
+
+    background-image: url("images/logo1.jpg") !important;
     background-position: center center !important;
     background-size: cover !important;
     background-repeat: no-repeat !important;
     background-attachment: fixed !important;
 
     background-color: #fbfaf6;
-    box-sizing: border-box;
-}
-
-/* =========================================================
-   2. MAIN DASHBOARD
-========================================================= */
-
-#menu.dashboard-page {
-    position: relative;
-    isolation: isolate;
-
-    width: 100%;
-    min-height: 100vh;
-    min-height: 100dvh;
-    height: auto !important;
-
-    background: #fbfaf6 !important;
     overflow: visible !important;
-    box-sizing: border-box;
 }
 
-/* Dashboard background layer */
-#menu.dashboard-page::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    z-index: -1;
-    pointer-events: none;
-
-    background-image:
-            linear-gradient(
-                    rgba(255, 255, 255, 0.30),
-                    rgba(255, 255, 255, 0.30)
-            ),
-            url("images/landscape.png");
-
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-}
-
-/* =========================================================
-   3. CENTER DASHBOARD CONTENT
-========================================================= */
-
+/* Keep dashboard content centered */
 #menu.dashboard-page .dashboard-shell {
-    position: relative;
-
     width: 100%;
     min-height: 100vh;
     min-height: 100dvh;
     height: auto !important;
 
     margin: 0 auto;
-
     background: transparent !important;
     overflow: visible !important;
 }
 
 #menu.dashboard-page .dashboard-main {
-    width: 100%;
-    max-width: 620px;
-
+    width: min(100%, 620px);
     margin: 0 auto;
-
     padding-left: 18px;
     padding-right: 18px;
 
-    box-sizing: border-box;
-
     height: auto !important;
     min-height: 0 !important;
-
-    background: transparent !important;
     overflow: visible !important;
+    background: transparent !important;
 }
 
-/* =========================================================
-   4. DASHBOARD HEADER
-========================================================= */
-
+/* Header */
 #menu.dashboard-page .dashboard-topbar {
     background: rgba(251, 250, 246, 0.76);
-
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
 }
 
-/* =========================================================
-   5. DASHBOARD CARDS
-========================================================= */
-
+/* Cards */
 #menu.dashboard-page .stay-card,
 #menu.dashboard-page .dash-item {
     backdrop-filter: blur(8px);
@@ -2169,78 +2117,16 @@ img {
 }
 
 /* =========================================================
-   6. DESKTOP BACKGROUND
-========================================================= */
-
-@media (min-width: 768px) {
-
-    #dashboard {
-        background-image: url("images/landscape.png") !important;
-        background-size: cover !important;
-        background-position: center center !important;
-        background-attachment: fixed !important;
-    }
-
-    #menu.dashboard-page::before {
-        background-image:
-                linear-gradient(
-                        rgba(255, 255, 255, 0.30),
-                        rgba(255, 255, 255, 0.30)
-                ),
-                url("images/landscape.png");
-
-        background-position: center center;
-        background-size: cover;
-        background-repeat: no-repeat;
-    }
-
-    #menu.dashboard-page .dashboard-main {
-        padding-top: 28px;
-    }
-
-    #menu.dashboard-page .dashboard-hero {
-        min-height: 290px;
-    }
-
-    #menu.dashboard-page .dashboard-menu {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    #menu.dashboard-page .dash-featured {
-        grid-column: 1 / -1;
-    }
-}
-
-/* =========================================================
-   7. MOBILE BACKGROUND
+   MOBILE BACKGROUND
 ========================================================= */
 
 @media (max-width: 767px) {
-
-    /* Opening page uses portrait image */
-    #dashboard {
-        background-image: url("images/portrait.png") !important;
-        background-position: center center !important;
+    #dashboard,
+    #menu.dashboard-page {
         background-size: cover !important;
+        background-position: center center !important;
         background-repeat: no-repeat !important;
-        background-attachment: scroll !important;
-    }
-
-    /* Dashboard uses portrait image */
-    #menu.dashboard-page::before {
-        position: absolute;
-        inset: 0;
-
-        background-image:
-                linear-gradient(
-                        rgba(255, 255, 255, 0.30),
-                        rgba(255, 255, 255, 0.30)
-                ),
-                url("images/portrait.png");
-
-        background-position: center top;
-        background-size: cover;
-        background-repeat: no-repeat;
+        background-color: #fbfaf6 !important;
     }
 
     #menu.dashboard-page .dashboard-shell,
@@ -2253,16 +2139,11 @@ img {
         position: sticky;
         top: 0;
     }
-
-    #menu.dashboard-page .dashboard-main {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
 }
 
+
 /* =========================================================
-   8. OTHER CONTENT PAGES
-   Keep other pages clean and white
+   OTHER CONTENT PAGES
 ========================================================= */
 
 .content-page,
@@ -2289,11 +2170,29 @@ img {
 }
 
 /* =========================================================
-   9. MOBILE LAYOUT
+   RESPONSIVE DASHBOARD
 ========================================================= */
 
-@media (max-width: 600px) {
+@media (min-width: 700px) {
+    #menu.dashboard-page .dashboard-main {
+        padding-top: 28px;
+    }
 
+    #menu.dashboard-page .dashboard-hero {
+        min-height: 290px;
+    }
+
+    #menu.dashboard-page .dashboard-menu {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    #menu.dashboard-page .dash-featured {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Mobile layout */
+@media (max-width: 600px) {
     .welcome-card {
         padding: 20px;
     }
@@ -2311,22 +2210,12 @@ img {
     }
 }
 
-/* =========================================================
-   10. PREVENT HORIZONTAL SCROLLING
-========================================================= */
-
+/* Prevent horizontal scrolling */
 html,
 body {
-    width: 100%;
     max-width: 100%;
     overflow-x: hidden;
 }
-
-#app {
-    width: 100%;
-    max-width: 100%;
-}
-
 
 :root{--av-ink:#183f45;--av-deep:#12363b;--av-mist:#edf5f2;--av-sea:#7ea9a6;--av-sand:#e6d6b8;--av-cream:#fbfaf6;--av-line:rgba(24,63,69,.11);--av-shadow:0 18px 45px rgba(24,63,69,.10)}
 .dashboard-page{background:radial-gradient(circle at 100% 0%,rgba(126,169,166,.18),transparent 28%),radial-gradient(circle at 0% 45%,rgba(230,214,184,.17),transparent 25%),var(--av-cream);color:var(--av-ink)}
