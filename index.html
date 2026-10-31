@@ -39,7 +39,7 @@
                     2470 Douglas Avenue, Delray Beach, FL 33444
                 </p>
 
-                <button class="btn-primary" onclick="showPage('menu')">
+                <button class="btn-primary" onclick="openRiskModal()">
                     Explore Your Stay
                     <i data-lucide="arrow-right" class="icon-sm"></i>
                 </button>
@@ -91,10 +91,8 @@
                     <button class="dash-item" onclick="showPage('rules')"><span class="dash-icon"><i data-lucide="shield-check"></i></span><span class="dash-text"><strong>House Rules</strong><small>Good to know</small></span></button>
                     <button class="dash-item" onclick="showPage('outdoor')"><span class="dash-icon"><i data-lucide="trees"></i></span><span class="dash-text"><strong>Outdoor</strong><small>Grill & Lawn</small></span></button>
                     <button class="dash-item" onclick="showPage('parking')"><span class="dash-icon"><i data-lucide="car"></i></span><span class="dash-text"><strong>Parking</strong><small>Private</small></span></button>
-                    <button class="dash-item" onclick="showPage('generator')"><span class="dash-icon"><i data-lucide="zap"></i></span><span class="dash-text"><strong>Generator</strong><small>Power guide</small></span></button>
                     <button class="dash-item" onclick="showPage('emergency')"><span class="dash-icon"><i data-lucide="siren"></i></span><span class="dash-text"><strong>Emergency</strong><small>Need help?</small></span></button>
                     <button class="dash-item" onclick="showPage('contact')"><span class="dash-icon"><i data-lucide="message-circle"></i></span><span class="dash-text"><strong>Contact</strong><small>Message us</small></span></button>
-                    <button class="dash-item" onclick="showPage('tutorials')"><span class="dash-icon"><i data-lucide="play-circle"></i></span><span class="dash-text"><strong>Tutorials</strong><small>Videos</small></span></button>
                 </nav>
                 <p class="dashboard-footer">Made with care for your stay <span>•</span> GK Listings - Delray Beach, Florida</p>
             </main>
@@ -1360,53 +1358,13 @@
 
                         <div>
                             <span class="label">Phone</span>
-                            <a href="tel:09958523392" class="value">
-                                0995 852 3392
-                            </a>
-                        </div>
-                    </div>
-
-
-                    <div class="contact-row">
-                        <i data-lucide="message-circle" class="icon-sm"></i>
-
-                        <div>
-                            <span class="label">Messenger</span>
-
-                            <a
-                                    href="https://www.facebook.com/profile.php?id=100063953355756"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="value"
-                            >
-                                Message us on Facebook
-                            </a>
-                        </div>
-                    </div>
-
-
-                    <div class="contact-row">
-                        <i data-lucide="airplay" class="icon-sm"></i>
-
-                        <div>
-                            <span class="label">Airbnb</span>
-
-                            <a
-                                    href="https://www.airbnb.com/rooms/1474268345150786176?unique_share_id=86b85baf-f660-42e8-8032-818b09ef00d5&viralityEntryPoint=1&s=76&source_impression_id=p3_1788138754_P3nIZpxZVOPrYEB2&modal=DESCRIPTION"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="value"
-                            >
-                                Open your Airbnb listing
+                            <a href="tel:5615624482" class="value">
+                                561 562 4482
                             </a>
                         </div>
                     </div>
 
                 </div>
-
-
-                <div class="divider"></div>
-
 
                 <div class="note">
                     <i data-lucide="heart" class="icon-sm"></i>
@@ -1740,9 +1698,54 @@
                 </div>
 
             </div>
+
         </div>
+
+
     </section>
 
+</div>
+
+<!-- RISK ACKNOWLEDGMENT MODAL -->
+<div id="risk-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <h3>Acknowledgment of Risks</h3>
+
+        <div class="modal-body">
+            <p>By continuing, you acknowledge and agree to the following:</p>
+
+            <ol class="styled-list">
+                <li>
+                    Guest(s) acknowledge that the use of the pool and gym facilities involves inherent risks, including but not limited to injury or death, and voluntarily assume all such risks.
+                </li>
+                <li>
+                    Compliance with Rules: Guest(s) agree to abide by all posted rules and regulations for pool and gym use provided by the Host or property management.
+                </li>
+                <li>
+                    Supervision: If children will be using the facilities, Guest(s) agree to provide adequate supervision and accept full responsibility for their safety.
+                </li>
+                <li>
+                    Release of Liability: Guest(s) release the Host, property owner, and property management from any liability for injury, illness, or death resulting from the use of the pool and gym facilities.
+                </li>
+                <li>
+                    Indemnification: Guest(s) agree to indemnify and hold the Host harmless from any claims or expenses arising from their use of the facilities.
+                </li>
+                <li>
+                    Emergency Procedures: Guest(s) agree to follow all posted emergency procedures and instructions provided by the Host or property management. By booking the property, Guest(s) acknowledge having read and understood this Release and agree to its terms.
+                </li>
+            </ol>
+
+            <p style="margin-top: 16px;">
+                By clicking <strong>I Agree</strong>, you confirm that you have read, understood, and agree to these terms.
+            </p>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-primary" onclick="acceptRisks()">
+                I Agree & Continue
+            </button>
+        </div>
+    </div>
 </div>
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="/supabase-config.js"></script>

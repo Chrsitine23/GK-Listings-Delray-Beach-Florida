@@ -227,6 +227,170 @@ img {
     }
 }
 
+/* ================================
+   RISK ACKNOWLEDGMENT MODAL
+================================ */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 20, 22, 0.82);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    z-index: 99999;
+    box-sizing: border-box;
+}
+
+.modal-content {
+    background: #ffffff;
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    max-height: 90dvh;
+    padding: 28px 26px;
+    border-radius: 18px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Heading */
+
+.modal-content h3 {
+    font-size: 21px;
+    font-weight: 700;
+    color: #294f59;
+    margin: 0 0 12px;
+    line-height: 1.4;
+}
+
+/* Scrollable body */
+
+.modal-body {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 5px;
+    color: #405b63;
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+.modal-body > p:first-child {
+    margin: 0 0 14px;
+    font-size: 16px;
+    color: #405b63;
+}
+
+/* Numbered list */
+
+.modal-body .styled-list {
+    list-style: none;
+    counter-reset: risk-counter;
+    padding: 0;
+    margin: 0;
+}
+
+.modal-body .styled-list li {
+    counter-increment: risk-counter;
+    position: relative;
+    padding-left: 42px;
+    margin-bottom: 19px;
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: #405b63;
+}
+
+.modal-body .styled-list li::before {
+    content: counter(risk-counter);
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #e0f0f1;
+    color: #326b78;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Agreement reminder */
+
+.modal-body > p:last-child {
+    margin: 22px 0 10px !important;
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: #405b63;
+}
+
+.modal-body strong {
+    color: #294f59;
+}
+
+/* Button area */
+
+.modal-actions {
+    padding-top: 16px;
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.modal-actions .btn-primary {
+    width: 100%;
+    max-width: 280px;
+    min-height: 50px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    background: #315f69;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(49, 95, 105, 0.2);
+}
+
+/* Mobile adjustments */
+
+@media (max-width: 480px) {
+    .modal-overlay {
+        padding: 12px;
+    }
+
+    .modal-content {
+        padding: 24px 20px;
+        max-height: 92vh;
+        max-height: 92dvh;
+        border-radius: 16px;
+    }
+
+    .modal-content h3 {
+        font-size: 20px;
+    }
+
+    .modal-body {
+        font-size: 15.5px;
+    }
+
+    .modal-body .styled-list li {
+        font-size: 15px;
+        margin-bottom: 17px;
+    }
+
+    .modal-actions .btn-primary {
+        max-width: 100%;
+    }
+}
+
+
 /* Small brand text */
 .cover-eyebrow {
     color: rgba(255, 255, 255, 0.72);

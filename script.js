@@ -20,6 +20,24 @@ function showPage(pageId) {
   }
 }
 
+function openRiskModal() {
+  const modal = document.getElementById('risk-modal');
+
+  if (modal) {
+    modal.style.display = 'flex';
+  }
+}
+
+function acceptRisks() {
+  const modal = document.getElementById('risk-modal');
+
+  if (modal) {
+    modal.style.display = 'none';
+  }
+
+  showPage('menu');
+}
+
 // Copy text helper (for WiFi)
 function copyText(elementId) {
   const el = document.getElementById(elementId);
