@@ -2125,7 +2125,8 @@ img {
     #menu.dashboard-page {
         background-size: cover !important;
         background-position: center center !important;
-        background-attachment: scroll !important;
+        background-repeat: no-repeat !important;
+        background-color: #fbfaf6 !important;
     }
 
     #menu.dashboard-page .dashboard-shell,
@@ -2139,6 +2140,7 @@ img {
         top: 0;
     }
 }
+
 
 /* =========================================================
    OTHER CONTENT PAGES
