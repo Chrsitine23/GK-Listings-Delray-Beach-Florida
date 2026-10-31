@@ -2053,42 +2053,36 @@ img {
     color: #789096;
 }
 /* =========================================
-   GLOBAL BACKGROUND IMAGE
+   DASHBOARD BACKGROUND IMAGE ONLY
 ========================================= */
 
-html,
-body {
-    min-height: 100%;
-}
-
-body {
+/* Dashboard background */
+#dashboard,
+.dashboard-page {
     background: url('images/logo.jfif') center center / cover no-repeat fixed !important;
 }
 
-#app {
+/* Keep dashboard content transparent */
+#dashboard .dashboard-shell,
+.dashboard-page .dashboard-shell {
     background: transparent !important;
 }
 
-.page,
-.dashboard-page,
-.content-page {
-    background: transparent !important;
+/* All other pages should have a white background */
+.content-page,
+#checkin,
+#checkout,
+#wifi,
+#welcome,
+#amenities,
+#location,
+#rules {
+    background: #ffffff !important;
 }
 
-.dashboard-shell {
-    background: transparent !important;
-}
-
-/* Keep content cards readable */
-.content-card {
-    background: rgba(255, 255, 255, 0.90) !important;
-}
-
-/* Mobile background adjustment */
-@media (max-width: 768px) {
-    body {
-        background-attachment: scroll !important;
-    }
+/* Remove background image from other pages */
+.content-page::before {
+    background: none !important;
 }
 
 /* MOBILE */
