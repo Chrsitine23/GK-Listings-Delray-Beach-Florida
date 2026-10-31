@@ -1,13 +1,3 @@
-/* =========================================================
-   ANGELICA AQUA VISTA — MINIMALIST GUEST GUIDE
-   Coastal • Seafoam • Warm Sand • Calm • Clean • Easy to Read
-   ========================================================= */
-
-/* =========================================================
-   REST N PLAY — MINIMALIST GUEST GUIDE
-   Japandi • Warm • Calm • Clean • Easy to Read
-========================================================= */
-
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap');
 
 
@@ -16,7 +6,6 @@
 ========================================================= */
 
 :root {
-    /* Angelica Aqua Vista — Coastal Japandi palette */
     --bg: #FAF8F2;
     --bg-soft: #FFFEFB;
     --card: #FFFFFF;
@@ -2059,7 +2048,7 @@ img {
 /* Dashboard background */
 #dashboard,
 .dashboard-page {
-    background: url('images/logo.jfif') center center / cover no-repeat fixed !important;
+    background: url('images/logo1.jpg') center center / cover no-repeat fixed !important;
 }
 
 /* Keep dashboard content transparent */
@@ -2094,30 +2083,191 @@ img {
     background-color: #ffffff !important;
 }
 
-/* DASHBOARD BACKGROUND ONLY */
+
+/* =========================================
+   DASHBOARD BACKGROUND IMAGE
+========================================= */
+
+/* =========================================================
+   ANGELICA AQUA VISTA
+   FINAL DASHBOARD BACKGROUND & SCROLLING
+========================================================= */
+
+/* Main dashboard */
 #menu.dashboard-page {
-    background-color: #ffffff !important;
+    position: relative;
+    width: 100%;
+
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    height: auto !important;
+
+    color: var(--av-ink);
+
+    background-color: var(--av-cream) !important;
 
     background-image:
             linear-gradient(
                     to bottom,
-                    rgba(255, 255, 255, 0) 0%,
-                    rgba(255, 255, 255, 0) 35%,
-                    rgba(255, 255, 255, 0.65) 65%,
-                    #ffffff 100%
+                    rgba(251, 250, 246, 0) 0%,
+                    rgba(251, 250, 246, 0.05) 25%,
+                    rgba(251, 250, 246, 0.35) 50%,
+                    rgba(251, 250, 246, 0.75) 75%,
+                    #fbfaf6 100%
             ),
-            url("images/logo.jfif") !important;
+            url("images/logo1.jpg") !important;
 
     background-position: center top;
-    background-size: 100% auto;
     background-repeat: no-repeat;
+
+    background-size: 100% auto;
+
+    /* Fixed background on desktop */
+    background-attachment: fixed;
+
+    overflow: visible !important;
 }
 
-/* Keep the dashboard content transparent */
-#menu.dashboard-page .dashboard-shell,
+/* Dashboard containers */
+#menu.dashboard-page .dashboard-shell {
+    width: 100%;
+
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    height: auto !important;
+
+    background: transparent !important;
+
+    overflow: visible !important;
+}
+
 #menu.dashboard-page .dashboard-main {
+    width: min(100%, 620px);
+
+    margin: 0 auto;
+
+    height: auto !important;
+    min-height: 0 !important;
+
+    overflow: visible !important;
+
     background: transparent !important;
 }
+
+/* Transparent header to show the background */
+#menu.dashboard-page .dashboard-topbar {
+    background: rgba(251, 250, 246, 0.76);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+/* Keep dashboard cards readable */
+#menu.dashboard-page .stay-card,
+#menu.dashboard-page .dash-item {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 768px) {
+    #menu.dashboard-page {
+        background-size: 100% auto;
+        background-position: center top;
+        background-attachment: fixed;
+    }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+    #menu.dashboard-page {
+        background-size: 100% auto;
+        background-position: center top;
+
+        /* More reliable scrolling on mobile */
+        background-attachment: scroll;
+    }
+
+    #menu.dashboard-page .dashboard-shell,
+    #menu.dashboard-page .dashboard-main {
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    #menu.dashboard-page .dashboard-topbar {
+        position: sticky;
+        top: 0;
+    }
+}
+
+/* =========================================================
+   OTHER CONTENT PAGES
+   Keep their backgrounds clean and white
+========================================================= */
+
+.content-page,
+#checkin,
+#checkout,
+#wifi,
+#welcome,
+#amenities,
+#location,
+#rules,
+#pool,
+#activities,
+#outdoor,
+#parking,
+#emergency,
+#contact,
+#generator {
+    background-color: #ffffff !important;
+    background-image: none !important;
+}
+
+/* Remove decorative background from other pages */
+.content-page::before {
+    display: none !important;
+}
+
+/* =========================================================
+   PREVENT UNWANTED HORIZONTAL SCROLLING
+========================================================= */
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* =========================================================
+   DASHBOARD RESPONSIVE LAYOUT
+========================================================= */
+
+@media (min-width: 700px) {
+    #menu.dashboard-page .dashboard-main {
+        padding-top: 28px;
+    }
+
+    #menu.dashboard-page .dashboard-hero {
+        min-height: 290px;
+    }
+
+    #menu.dashboard-page .dashboard-menu {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    #menu.dashboard-page .dash-featured {
+        grid-column: 1 / -1;
+    }
+}
+
 /* MOBILE */
 
 @media (max-width: 600px) {
