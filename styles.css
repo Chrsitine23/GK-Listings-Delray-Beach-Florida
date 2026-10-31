@@ -2059,7 +2059,7 @@ img {
     min-height: 100vh;
     min-height: 100dvh;
 
-    background-image: url("images/background-landscape.jpg") !important;
+    background-image: url("images/landscape.png") !important;
     background-position: center center !important;
     background-size: cover !important;
     background-repeat: no-repeat !important;
@@ -2104,7 +2104,7 @@ img {
                     rgba(255, 255, 255, 0.30),
                     rgba(255, 255, 255, 0.30)
             ),
-            url("images/background-landscape.jpg");
+            url("images/landscape.png");
 
     background-position: center center;
     background-size: cover;
@@ -2175,7 +2175,7 @@ img {
 @media (min-width: 768px) {
 
     #dashboard {
-        background-image: url("images/background-landscape.jpg") !important;
+        background-image: url("images/landscape.png") !important;
         background-size: cover !important;
         background-position: center center !important;
         background-attachment: fixed !important;
@@ -2187,7 +2187,7 @@ img {
                         rgba(255, 255, 255, 0.30),
                         rgba(255, 255, 255, 0.30)
                 ),
-                url("images/background-landscape.jpg");
+                url("images/landscape.png");
 
         background-position: center center;
         background-size: cover;
@@ -2219,7 +2219,7 @@ img {
 
     /* Opening page uses portrait image */
     #dashboard {
-        background-image: url("images/background-portrait.jpg") !important;
+        background-image: url("images/portrait.png") !important;
         background-position: center center !important;
         background-size: cover !important;
         background-repeat: no-repeat !important;
@@ -2236,7 +2236,7 @@ img {
                         rgba(255, 255, 255, 0.30),
                         rgba(255, 255, 255, 0.30)
                 ),
-                url("images/background-portrait.jpg");
+                url("images/portrait.png");
 
         background-position: center top;
         background-size: cover;
