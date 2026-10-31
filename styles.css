@@ -2041,120 +2041,75 @@ img {
     font-size: 13px;
     color: #789096;
 }
-/* =========================================
-   DASHBOARD BACKGROUND IMAGE ONLY
-========================================= */
 
-/* Dashboard background */
-#dashboard,
-.dashboard-page {
-    background: url('images/logo1.jpg') center center / cover no-repeat fixed !important;
-}
+/* =========================================================
+   FULL-SCREEN BACKGROUND — OPENING & DASHBOARD
+========================================================= */
 
-/* Keep dashboard content transparent */
-#dashboard .dashboard-shell,
-.dashboard-page .dashboard-shell {
-    background: transparent !important;
-}
+/* Opening page */
+#dashboard {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
 
-/* All other pages should have a white background */
-.content-page,
-#checkin,
-#checkout,
-#wifi,
-#welcome,
-#amenities,
-#location,
-#rules {
-    background: #ffffff !important;
-}
-
-/* Remove background image from other pages */
-.content-page::before {
-    background: none !important;
-}
-
-#dashboard,
-.dashboard-page {
-    background-image: url('images/logo.jfif') !important;
+    background-image: url("images/logo1.jpg") !important;
     background-position: center center !important;
-    background-size: contain !important;
+    background-size: cover !important;
     background-repeat: no-repeat !important;
-    background-color: #ffffff !important;
+    background-attachment: fixed !important;
 }
 
-
-/* Main dashboard */
+/* Dashboard */
 #menu.dashboard-page {
     position: relative;
     width: 100%;
-
     min-height: 100vh;
     min-height: 100dvh;
-
     height: auto !important;
 
-    color: var(--av-ink);
+    background-image: url("images/logo1.jpg") !important;
+    background-position: center center !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
 
-    background-color: var(--av-cream) !important;
-
-    background-image:
-            linear-gradient(
-                    to bottom,
-                    rgba(251, 250, 246, 0) 0%,
-                    rgba(251, 250, 246, 0.05) 25%,
-                    rgba(251, 250, 246, 0.35) 50%,
-                    rgba(251, 250, 246, 0.75) 75%,
-                    #fbfaf6 100%
-            ),
-            url("images/logo1.jpg") !important;
-
-    background-position: center top;
-    background-repeat: no-repeat;
-
-    background-size: 100% auto;
-
-    /* Fixed background on desktop */
-    background-attachment: fixed;
-
+    background-color: #fbfaf6;
     overflow: visible !important;
 }
 
-/* Dashboard containers */
+/* Keep dashboard content centered */
 #menu.dashboard-page .dashboard-shell {
     width: 100%;
-
     min-height: 100vh;
     min-height: 100dvh;
-
     height: auto !important;
 
+    margin: 0 auto;
     background: transparent !important;
-
     overflow: visible !important;
 }
 
 #menu.dashboard-page .dashboard-main {
     width: min(100%, 620px);
-
     margin: 0 auto;
+    padding-left: 18px;
+    padding-right: 18px;
 
     height: auto !important;
     min-height: 0 !important;
-
     overflow: visible !important;
-
     background: transparent !important;
 }
 
-/* Transparent header to show the background */
+/* Header */
 #menu.dashboard-page .dashboard-topbar {
     background: rgba(251, 250, 246, 0.76);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
 }
 
-/* Keep dashboard cards readable */
+/* Cards */
 #menu.dashboard-page .stay-card,
 #menu.dashboard-page .dash-item {
     backdrop-filter: blur(8px);
@@ -2162,28 +2117,15 @@ img {
 }
 
 /* =========================================================
-   DESKTOP
-========================================================= */
-
-@media (min-width: 768px) {
-    #menu.dashboard-page {
-        background-size: 100% auto;
-        background-position: center top;
-        background-attachment: fixed;
-    }
-}
-
-/* =========================================================
-   MOBILE
+   MOBILE BACKGROUND
 ========================================================= */
 
 @media (max-width: 767px) {
+    #dashboard,
     #menu.dashboard-page {
-        background-size: 100% auto;
-        background-position: center top;
-
-        /* More reliable scrolling on mobile */
-        background-attachment: scroll;
+        background-size: cover !important;
+        background-position: center center !important;
+        background-attachment: scroll !important;
     }
 
     #menu.dashboard-page .dashboard-shell,
@@ -2200,7 +2142,6 @@ img {
 
 /* =========================================================
    OTHER CONTENT PAGES
-   Keep their backgrounds clean and white
 ========================================================= */
 
 .content-page,
@@ -2222,23 +2163,12 @@ img {
     background-image: none !important;
 }
 
-/* Remove decorative background from other pages */
 .content-page::before {
     display: none !important;
 }
 
 /* =========================================================
-   PREVENT UNWANTED HORIZONTAL SCROLLING
-========================================================= */
-
-html,
-body {
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-/* =========================================================
-   DASHBOARD RESPONSIVE LAYOUT
+   RESPONSIVE DASHBOARD
 ========================================================= */
 
 @media (min-width: 700px) {
@@ -2259,10 +2189,8 @@ body {
     }
 }
 
-/* MOBILE */
-
+/* Mobile layout */
 @media (max-width: 600px) {
-
     .welcome-card {
         padding: 20px;
     }
@@ -2278,8 +2206,15 @@ body {
     .guide-items {
         grid-template-columns: 1fr 1fr;
     }
-
 }
+
+/* Prevent horizontal scrolling */
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 :root{--av-ink:#183f45;--av-deep:#12363b;--av-mist:#edf5f2;--av-sea:#7ea9a6;--av-sand:#e6d6b8;--av-cream:#fbfaf6;--av-line:rgba(24,63,69,.11);--av-shadow:0 18px 45px rgba(24,63,69,.10)}
 .dashboard-page{background:radial-gradient(circle at 100% 0%,rgba(126,169,166,.18),transparent 28%),radial-gradient(circle at 0% 45%,rgba(230,214,184,.17),transparent 25%),var(--av-cream);color:var(--av-ink)}
 .dashboard-shell{width:100%;min-height:100dvh}
