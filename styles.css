@@ -2044,7 +2044,6 @@ img {
 /* =========================================================
    DASHBOARD BACKGROUND – Full-page cover background, scrollable
 ========================================================= */
-
 .dashboard-page {
     position: relative;
     width: 100%;
@@ -2053,24 +2052,23 @@ img {
     height: auto;
     overflow-x: hidden;
 
-    /* 1. Solid fallback color */
     background-color: var(--av-cream, #fbfaf6);
+    background-image:
+            linear-gradient(
+                    to bottom,
+                    rgba(251, 250, 246, 0) 0%,
+                    rgba(251, 250, 246, 0.15) 35%,
+                    rgba(251, 250, 246, 0.55) 70%,
+                    #fbfaf6 100%
+            ),
+            url("/images/logo1.jpg"); /* Leading slash points to root */
 
-    /* 2. Separate background image declaration */
-    background-image: url("images/logo1.jpg");
-
-    /* 3. Explicitly set positioning, scaling, and scrolling behavior */
     background-position: center top;
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: scroll;
 }
 
-/* Optional: If you want to keep your soft gradient fade over the image cleanly,
-   apply it as a pseudo-element or keep it separate so it doesn't conflict.
-   If you just want the raw image to show first to test it, use the block above. */
-
-/* Keep inner shells transparent so the background image shows through */
 .dashboard-page .dashboard-shell,
 .dashboard-page .dashboard-main {
     background: transparent !important;
