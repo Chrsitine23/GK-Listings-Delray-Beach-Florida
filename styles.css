@@ -2042,7 +2042,6 @@ img {
     color: #789096;
 }
 
-
 /* =========================================================
    FULL-SCREEN BACKGROUND — OPENING & DASHBOARD
 ========================================================= */
@@ -2054,7 +2053,7 @@ img {
     min-height: 100vh;
     min-height: 100dvh;
 
-    background-image: url("images/background-landscape.jpg") !important;
+    background-image: url("images/logo1.jpg") !important;
     background-position: center center !important;
     background-size: cover !important;
     background-repeat: no-repeat !important;
@@ -2069,7 +2068,7 @@ img {
     min-height: 100dvh;
     height: auto !important;
 
-    background-image: url("images/background-landscape.jpg") !important;
+    background-image: url("images/logo1.jpg") !important;
     background-position: center center !important;
     background-size: cover !important;
     background-repeat: no-repeat !important;
@@ -2122,14 +2121,11 @@ img {
 ========================================================= */
 
 @media (max-width: 767px) {
-
     #dashboard,
     #menu.dashboard-page {
-        background-image: url("images/background-portrait.jpg") !important;
         background-size: cover !important;
         background-position: center center !important;
         background-repeat: no-repeat !important;
-        background-attachment: scroll !important;
         background-color: #fbfaf6 !important;
     }
 
@@ -2144,6 +2140,7 @@ img {
         top: 0;
     }
 }
+
 
 /* =========================================================
    OTHER CONTENT PAGES
@@ -2219,7 +2216,6 @@ body {
     max-width: 100%;
     overflow-x: hidden;
 }
-
 
 :root{--av-ink:#183f45;--av-deep:#12363b;--av-mist:#edf5f2;--av-sea:#7ea9a6;--av-sand:#e6d6b8;--av-cream:#fbfaf6;--av-line:rgba(24,63,69,.11);--av-shadow:0 18px 45px rgba(24,63,69,.10)}
 .dashboard-page{background:radial-gradient(circle at 100% 0%,rgba(126,169,166,.18),transparent 28%),radial-gradient(circle at 0% 45%,rgba(230,214,184,.17),transparent 25%),var(--av-cream);color:var(--av-ink)}
