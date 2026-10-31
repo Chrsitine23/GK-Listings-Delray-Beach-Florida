@@ -2094,13 +2094,11 @@ img {
     background-color: #ffffff !important;
 }
 
-/* =========================================
-   DASHBOARD BACKGROUND WITH GRADIENT
-========================================= */
+/* DASHBOARD BACKGROUND ONLY */
+#menu.dashboard-page {
+    background-color: #ffffff !important;
 
-#dashboard,
-.dashboard-page {
-    background:
+    background-image:
             linear-gradient(
                     to bottom,
                     rgba(255, 255, 255, 0) 0%,
@@ -2108,17 +2106,16 @@ img {
                     rgba(255, 255, 255, 0.65) 65%,
                     #ffffff 100%
             ),
-            url('images/logo.jfif');
+            url("images/logo.jfif") !important;
 
     background-position: center top;
     background-size: 100% auto;
     background-repeat: no-repeat;
-    background-color: #ffffff;
 }
 
-/* Keep dashboard containers transparent */
-#dashboard .dashboard-shell,
-.dashboard-page .dashboard-shell {
+/* Keep the dashboard content transparent */
+#menu.dashboard-page .dashboard-shell,
+#menu.dashboard-page .dashboard-main {
     background: transparent !important;
 }
 /* MOBILE */
