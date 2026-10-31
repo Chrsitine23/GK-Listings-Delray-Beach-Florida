@@ -198,7 +198,7 @@ img {
             rgba(41, 77, 85, 0.12) 40%,
             rgba(41, 77, 85, 0.72) 100%
     ),
-    url('images/gk cover.jfif') center / cover no-repeat;
+    url('images/logo.jfif') center / cover no-repeat;
 }
 
 .cover-content {
@@ -2052,7 +2052,44 @@ img {
     font-size: 13px;
     color: #789096;
 }
+/* =========================================
+   GLOBAL BACKGROUND IMAGE
+========================================= */
 
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    background: url('images/logo.jfif') center center / cover no-repeat fixed !important;
+}
+
+#app {
+    background: transparent !important;
+}
+
+.page,
+.dashboard-page,
+.content-page {
+    background: transparent !important;
+}
+
+.dashboard-shell {
+    background: transparent !important;
+}
+
+/* Keep content cards readable */
+.content-card {
+    background: rgba(255, 255, 255, 0.90) !important;
+}
+
+/* Mobile background adjustment */
+@media (max-width: 768px) {
+    body {
+        background-attachment: scroll !important;
+    }
+}
 
 /* MOBILE */
 
