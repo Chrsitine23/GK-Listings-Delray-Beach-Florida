@@ -461,6 +461,61 @@
 
         </div>
 
+                
+        <!-- =====================================
+            PHOTO LIGHTBOX
+        ====================================== -->
+
+        <div id="tour-lightbox" class="tour-lightbox" aria-hidden="true">
+
+            <!-- CLOSE BUTTON -->
+            <button
+                class="lightbox-close"
+                onclick="closeTourLightbox()"
+                aria-label="Close photo"
+            >
+                &times;
+            </button>
+
+            <!-- PREVIOUS PHOTO -->
+            <button
+                class="lightbox-arrow lightbox-prev"
+                onclick="changeTourPhoto(-1)"
+                aria-label="Previous photo"
+            >
+                &#10094;
+            </button>
+
+            <!-- FULL IMAGE -->
+            <div class="lightbox-content">
+
+                <img
+                    id="lightbox-image"
+                    src=""
+                    alt="Property photo"
+                >
+
+                <!-- PHOTO COUNTER -->
+                <div class="lightbox-counter">
+                    <span id="lightbox-current">1</span>
+                    /
+                    <span id="lightbox-total">1</span>
+                </div>
+
+            </div>
+
+            <!-- NEXT PHOTO -->
+            <button
+                class="lightbox-arrow lightbox-next"
+                onclick="changeTourPhoto(1)"
+                aria-label="Next photo"
+            >
+                &#10095;
+            </button>
+
+        </div>
+
+
 
 
             <!-- CONTACT / HELP -->
