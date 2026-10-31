@@ -2219,11 +2219,11 @@ body {
 
 
 /* =========================================
-   QUICK TOUR - AIRBNB MASONRY GALLERY
+   QUICK TOUR - GRID PHOTO GALLERY
 ========================================= */
 
 .welcome-tour {
-    margin-top: 28px;
+    margin-top: 32px;
     padding: 24px;
     background: #ffffff;
     border: 1px solid #eeeeee;
@@ -2236,7 +2236,8 @@ body {
 ========================================= */
 
 .tour-main-header {
-    margin-bottom: 30px;
+    margin-bottom: 36px;
+    padding: 0 4px;
 }
 
 .tour-eyebrow {
@@ -2264,18 +2265,20 @@ body {
 
 
 /* =========================================
-   INDIVIDUAL TOUR SECTIONS
+   TOUR SECTION
 ========================================= */
 
 .tour-section {
-    margin-bottom: 32px;
+    margin-bottom: 36px;
 }
 
 .tour-section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 14px;
+
+    margin-bottom: 22px;
+    padding: 0 4px;
 }
 
 .tour-section-header > div {
@@ -2305,92 +2308,125 @@ body {
 
 
 /* =========================================
-   MASONRY GALLERY
+   GRID PHOTO GALLERY
 ========================================= */
 
 .tour-masonry {
-    columns: 2;
-    column-gap: 10px;
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+
+    padding: 10px;
+
+    background: #faf8f6;
+
+    border-radius: 16px;
 }
 
+
+/* =========================================
+   PHOTO CARDS
+========================================= */
+
 .tour-photo {
-    display: inline-block;
+    position: relative;
+
     width: 100%;
-    margin-bottom: 10px;
+    min-width: 0;
 
     overflow: hidden;
-    border-radius: 10px;
 
-    background: #f4f1ed;
+    border-radius: 12px;
+
+    background: #f1eeeb;
+
+    margin: 0;
 
     break-inside: avoid;
 }
 
 .tour-photo img {
     display: block;
+
     width: 100%;
     height: auto;
 
     object-fit: cover;
 
-    transition: transform 0.4s ease;
+    border-radius: 12px;
+
+    transition: transform 0.35s ease;
 }
 
 
 /* =========================================
-   LIVING ROOM GALLERY
+   LIVING ROOM GRID
 ========================================= */
 
 .living-gallery {
-    columns: 2;
+    grid-template-columns: 1.3fr 1fr;
 }
 
 .living-gallery .tour-photo:nth-child(1) {
-    break-inside: avoid;
+    grid-row: span 2;
 }
 
-.living-gallery .tour-photo:nth-child(2) {
-    break-inside: avoid;
+.living-gallery .tour-photo:nth-child(2),
+.living-gallery .tour-photo:nth-child(3) {
+    align-self: start;
 }
 
 
 /* =========================================
-   BEDROOM GALLERY
+   BEDROOM GRID
 ========================================= */
 
 .bedroom-gallery {
-    columns: 2;
+    grid-template-columns: 1fr 1fr;
+}
+
+.bedroom-gallery .tour-photo:nth-child(1) {
+    grid-column: 1 / 3;
 }
 
 
 /* =========================================
-   BATHROOM GALLERY
+   BATHROOM GRID
 ========================================= */
 
 .bathroom-gallery {
-    columns: 2;
+    grid-template-columns: 1fr 1fr;
+}
+
+.bathroom-gallery .tour-photo:nth-child(1) {
+    grid-row: span 2;
 }
 
 
 /* =========================================
-   POOL GALLERY
+   POOL GRID
 ========================================= */
 
 .pool-gallery {
-    columns: 3;
-    column-gap: 10px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.pool-gallery .tour-photo {
-    margin-bottom: 10px;
+.pool-gallery .tour-photo:nth-child(1) {
+    grid-row: span 2;
+}
+
+.pool-gallery .tour-photo:nth-child(4) {
+    grid-column: span 2;
 }
 
 
 /* =========================================
-   IMAGE HOVER EFFECT
+   HOVER EFFECT
 ========================================= */
 
-.tour-photo img:hover {
+.tour-photo:hover img {
     transform: scale(1.04);
 }
 
@@ -2404,8 +2440,8 @@ body {
     align-items: center;
     gap: 8px;
 
-    margin-top: 8px;
-    padding-top: 18px;
+    margin-top: 10px;
+    padding: 20px 4px 0;
 
     border-top: 1px solid #eeeeee;
 
@@ -2431,7 +2467,7 @@ body {
     }
 
     .pool-gallery {
-        columns: 2;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
 }
@@ -2448,6 +2484,10 @@ body {
         border-radius: 16px;
     }
 
+    .tour-main-header {
+        margin-bottom: 28px;
+    }
+
     .tour-main-header h3 {
         font-size: 21px;
     }
@@ -2456,25 +2496,41 @@ body {
         font-size: 12px;
     }
 
+    .tour-section {
+        margin-bottom: 30px;
+    }
+
+    .tour-section-header {
+        margin-bottom: 18px;
+    }
+
     .tour-section-header h4 {
         font-size: 15px;
     }
 
     .tour-masonry {
-        column-gap: 8px;
+        gap: 8px;
+        padding: 8px;
+        border-radius: 12px;
     }
 
     .tour-photo {
-        margin-bottom: 8px;
-        border-radius: 8px;
+        border-radius: 9px;
+    }
+
+    .tour-photo img {
+        border-radius: 9px;
     }
 
     .pool-gallery {
-        columns: 2;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tour-footer {
+        font-size: 11px;
     }
 
 }
-
 
 
 :root{--av-ink:#183f45;--av-deep:#12363b;--av-mist:#edf5f2;--av-sea:#7ea9a6;--av-sand:#e6d6b8;--av-cream:#fbfaf6;--av-line:rgba(24,63,69,.11);--av-shadow:0 18px 45px rgba(24,63,69,.10)}
