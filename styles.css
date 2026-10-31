@@ -2085,6 +2085,15 @@ img {
     background: none !important;
 }
 
+#dashboard,
+.dashboard-page {
+    background-image: url('images/logo.jfif') !important;
+    background-position: center center !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-color: #ffffff !important;
+}
+
 /* MOBILE */
 
 @media (max-width: 600px) {
