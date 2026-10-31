@@ -2063,7 +2063,7 @@ img {
                     rgba(251, 250, 246, 0.55) 70%,
                     #fbfaf6 100%
             ),
-            url("images/logo1.jpg");
+            url("/images/logo1.jpg");
 
     background-position: center top;
     background-size: cover;          /* Forces the background image to cover the entire screen width/height */
