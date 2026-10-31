@@ -2042,16 +2042,17 @@ img {
     color: #789096;
 }
 /* =========================================================
-   DASHBOARD BACKGROUND – Full-page cover background, scrollable
+   DASHBOARD BACKGROUND – full-page cover (Scrollable)
 ========================================================= */
+
 .dashboard-page {
     position: relative;
-    width: 100%;
     min-height: 100vh;
     min-height: 100dvh;
     height: auto;
-    overflow-x: hidden;
+    overflow: visible;
 
+    /* Solid fallback color & layered background */
     background-color: var(--av-cream, #fbfaf6);
     background-image:
             linear-gradient(
@@ -2061,19 +2062,20 @@ img {
                     rgba(251, 250, 246, 0.55) 70%,
                     #fbfaf6 100%
             ),
-            url("/images/logo1.jpg"); /* Leading slash points to root */
-
-    background-position: center top;
+            url("images/logo1.jpg");
+    background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
+
+    /* Changed from fixed to scroll */
     background-attachment: scroll;
 }
 
+/* Keep inner shells transparent so the background shows through */
 .dashboard-page .dashboard-shell,
 .dashboard-page .dashboard-main {
-    background: transparent !important;
+    background: transparent;
 }
-
 :root{--av-ink:#183f45;--av-deep:#12363b;--av-mist:#edf5f2;--av-sea:#7ea9a6;--av-sand:#e6d6b8;--av-cream:#fbfaf6;--av-line:rgba(24,63,69,.11);--av-shadow:0 18px 45px rgba(24,63,69,.10)}
 .dashboard-page{background:radial-gradient(circle at 100% 0%,rgba(126,169,166,.18),transparent 28%),radial-gradient(circle at 0% 45%,rgba(230,214,184,.17),transparent 25%),var(--av-cream);color:var(--av-ink)}
 .dashboard-shell{width:100%;min-height:100dvh}
