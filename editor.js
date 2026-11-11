@@ -119,6 +119,69 @@
   }
 
   /* =========================================================
+     OPENING SCREEN SETTINGS
+  ========================================================= */
+
+  function getOpeningSettings(g) {
+    const data = g?.guide_data || {};
+    const opening = data.opening || {};
+
+    return {
+      location: opening.location || g?.address || 'Your destination',
+      button_text: opening.button_text || 'Explore Your Stay',
+      cover_photo: opening.cover_photo || ''
+    };
+  }
+
+  function applyOpeningSettings(g) {
+    if (!g) return;
+
+    const opening = getOpeningSettings(g);
+
+    setText(
+        'cover-location-text',
+        opening.location
+    );
+
+    setText(
+        'cover-button-text',
+        opening.button_text
+    );
+
+    const cover = document.querySelector(
+        '#cover .cover-image'
+    );
+
+    if (cover) {
+      if (opening.cover_photo) {
+        const safeUrl = opening.cover_photo.replace(
+            /["\\\n\r]/g,
+            '\\$&'
+        );
+
+        cover.style.backgroundImage =
+            'linear-gradient(' +
+            '180deg,' +
+            'rgba(41, 77, 85, 0.03) 10%,' +
+            'rgba(41, 77, 85, 0.12) 40%,' +
+            'rgba(41, 77, 85, 0.72) 100%' +
+            '), url("' + safeUrl + '")';
+
+        cover.style.backgroundPosition = 'center';
+        cover.style.backgroundSize = 'cover';
+        cover.style.backgroundRepeat = 'no-repeat';
+
+      } else {
+        // Restore the original CSS background.
+        cover.style.backgroundImage = '';
+        cover.style.backgroundPosition = '';
+        cover.style.backgroundSize = '';
+        cover.style.backgroundRepeat = '';
+      }
+    }
+  }
+
+  /* =========================================================
      APPLY GUIDE DATA TO WEBSITE
   ========================================================= */
 
@@ -130,10 +193,7 @@
         g.property_name || 'Welcome Home'
     );
 
-    setText(
-        'cover-location-text',
-        g.address || 'Your destination'
-    );
+    applyOpeningSettings(g);
 
     setText(
         'welcome-title',
@@ -207,6 +267,13 @@
     fields.forEach(function (key) {
       setValue('e-' + key, g[key]);
     });
+
+    const opening = getOpeningSettings(g);
+
+    setValue('e-opening_location', opening.location);
+    setValue('e-opening_button_text', opening.button_text);
+
+    renderOpeningCoverPreview();
   }
 
   /* =========================================================
@@ -421,6 +488,14 @@
         <button
           class="editor-tab active"
           type="button"
+          data-tab="opening"
+        >
+          Opening
+        </button>
+
+        <button
+          class="editor-tab"
+          type="button"
           data-tab="welcome"
         >
           Welcome
@@ -454,10 +529,84 @@
 
       <div class="editor-body">
 
-        <!-- WELCOME -->
+        <!-- OPENING -->
 
         <section
           class="editor-section active"
+          data-section="opening"
+        >
+
+          <h3>Opening Screen</h3>
+
+          <p>
+            Customize the first screen your guests see when they open your guide.
+          </p>
+
+          <label>
+            Cover photo
+
+            <input
+              id="e-opening-cover-upload"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+            >
+          </label>
+
+          <p>
+            JPG, PNG, or WEBP. Maximum 5 MB.
+            This photo is separate from your property gallery.
+          </p>
+
+          <div
+            id="opening-cover-preview"
+            style="
+              width:100%;
+              height:160px;
+              border-radius:12px;
+              overflow:hidden;
+              background:#f1f3f1;
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              margin:12px 0 18px;
+              color:#64736b;
+              font-size:13px;
+            "
+          >
+            No custom cover photo uploaded.
+          </div>
+
+          <label>
+            Opening location
+
+            <input
+              id="e-opening_location"
+              type="text"
+              placeholder="Your property address or location"
+            >
+          </label>
+
+          <label>
+            Opening button text
+
+            <input
+              id="e-opening_button_text"
+              type="text"
+              maxlength="40"
+              placeholder="Explore Your Stay"
+            >
+          </label>
+
+          <p>
+            Example: Explore Your Stay, Enter Your Stay, or Let's Get Started.
+          </p>
+
+        </section>
+
+        <!-- WELCOME -->
+
+        <section
+          class="editor-section"
           data-section="welcome"
         >
 
@@ -669,6 +818,7 @@
     document.body.appendChild(panel);
 
     updateEditorFields(guide);
+    renderOpeningCoverPreview();
     renderEditorPhotos();
     updatePublishControls();
 
@@ -797,12 +947,20 @@
         .addEventListener('click', copyGuestLink);
 
     /* -----------------------------------------
-       Photo upload
+       Gallery photo upload
     ----------------------------------------- */
 
     document
         .getElementById('e-photo-upload')
         .addEventListener('change', uploadGuidePhotos);
+
+    /* -----------------------------------------
+       Opening cover upload
+    ----------------------------------------- */
+
+    document
+        .getElementById('e-opening-cover-upload')
+        .addEventListener('change', uploadOpeningCover);
 
     /* -----------------------------------------
        Keyboard shortcut
@@ -824,6 +982,170 @@
 
         }
     );
+  }
+
+  /* =========================================================
+     OPENING COVER PHOTO PREVIEW
+  ========================================================= */
+
+  function renderOpeningCoverPreview() {
+    const container = document.getElementById(
+        'opening-cover-preview'
+    );
+
+    if (!container) return;
+
+    const opening = getOpeningSettings(guide);
+
+    container.replaceChildren();
+
+    if (!opening.cover_photo) {
+      container.textContent =
+          'No custom cover photo uploaded.';
+      return;
+    }
+
+    const image = document.createElement('img');
+
+    image.src = opening.cover_photo;
+    image.alt = 'Opening cover photo preview';
+
+    image.style.width = '100%';
+    image.style.height = '100%';
+    image.style.objectFit = 'cover';
+
+    container.appendChild(image);
+  }
+
+  /* =========================================================
+     UPLOAD OPENING COVER PHOTO
+  ========================================================= */
+
+  async function uploadOpeningCover(event) {
+    const input = event.target;
+    const file = input.files?.[0];
+
+    if (!file) return;
+
+    if (!editorToken || !publicId) {
+      setStatus(
+          'Editor information is missing.',
+          false
+      );
+      input.value = '';
+      return;
+    }
+
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp'
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      setStatus(
+          'Only JPG, PNG, and WEBP photos are allowed.',
+          false
+      );
+      input.value = '';
+      return;
+    }
+
+    if (
+        file.size === 0 ||
+        file.size > 5 * 1024 * 1024
+    ) {
+      setStatus(
+          'Cover photo must be between 1 byte and 5 MB.',
+          false
+      );
+      input.value = '';
+      return;
+    }
+
+    input.disabled = true;
+
+    try {
+      setStatus('Uploading opening cover photo...');
+
+      const formData = new FormData();
+
+      formData.append('edit_token', editorToken);
+      formData.append('file', file);
+      formData.append('upload_type', 'cover');
+
+      const baseUrl = window.SUPABASE_URL.replace(
+          /\/+$/,
+          ''
+      );
+
+      const response = await fetch(
+          baseUrl + '/functions/v1/upload-guide-photo',
+          {
+            method: 'POST',
+            headers: {
+              apikey: window.SUPABASE_ANON_KEY
+            },
+            body: formData
+          }
+      );
+
+      let result;
+
+      try {
+        result = await response.json();
+      } catch (error) {
+        throw new Error(
+            'Invalid response from photo upload server.'
+        );
+      }
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+            result.error || 'Cover photo upload failed.'
+        );
+      }
+
+      if (!result.photo_url) {
+        throw new Error(
+            'The upload server did not return a photo URL.'
+        );
+      }
+
+      if (!guide.guide_data || typeof guide.guide_data !== 'object') {
+        guide.guide_data = {};
+      }
+
+      if (
+          !guide.guide_data.opening ||
+          typeof guide.guide_data.opening !== 'object'
+      ) {
+        guide.guide_data.opening = {};
+      }
+
+      guide.guide_data.opening.cover_photo =
+          result.photo_url;
+
+      // Update the opening screen immediately.
+      applyOpeningSettings(guide);
+
+      // Update the editor preview.
+      renderOpeningCoverPreview();
+
+      setStatus(
+          'Cover photo uploaded. Click Save Changes to keep it.'
+      );
+
+    } catch (error) {
+      setStatus(
+          'Cover photo upload error: ' + error.message,
+          false
+      );
+
+    } finally {
+      input.disabled = false;
+      input.value = '';
+    }
   }
 
   /* =========================================================
@@ -907,8 +1229,6 @@
     if (unpublishButton) unpublishButton.disabled = true;
 
     try {
-      /* Save all recent edits first */
-
       setStatus('Saving your changes before publishing...');
 
       const saved = await saveGuide();
@@ -920,8 +1240,6 @@
         );
         return;
       }
-
-      /* Call secure Supabase publishing function */
 
       setStatus('Publishing your guide...');
 
@@ -1190,6 +1508,9 @@
         formData.append('edit_token', editorToken);
         formData.append('file', file);
 
+        // Existing behavior defaults to gallery.
+        formData.append('upload_type', 'gallery');
+
         const response = await fetch(
             baseUrl + '/functions/v1/upload-guide-photo',
             {
@@ -1306,6 +1627,32 @@
           : value;
     });
 
+    const locationInput = document.getElementById(
+        'e-opening_location'
+    );
+
+    const buttonInput = document.getElementById(
+        'e-opening_button_text'
+    );
+
+    const previousOpening = guide?.guide_data?.opening || {};
+
+    values.guide_data = {
+      opening: {
+        ...previousOpening,
+
+        location: locationInput
+            ? locationInput.value.trim()
+            : previousOpening.location || '',
+
+        button_text: buttonInput
+            ? buttonInput.value.trim()
+            : previousOpening.button_text || 'Explore Your Stay',
+
+        cover_photo: previousOpening.cover_photo || ''
+      }
+    };
+
     return values;
   }
 
@@ -1374,6 +1721,8 @@
       guide = updatedGuide;
 
       applyGuide(guide);
+      renderOpeningCoverPreview();
+      renderEditorPhotos();
       updatePublishControls();
 
       setStatus('Saved successfully ✓');
@@ -1630,8 +1979,6 @@
   async function init() {
     const currentRoute = route();
 
-    /* Check Supabase library */
-
     if (
         !window.supabase ||
         typeof window.supabase.createClient !== 'function'
@@ -1642,8 +1989,6 @@
       return;
     }
 
-    /* Check configuration */
-
     if (!configReady()) {
       if (currentRoute.mode === 'edit') {
         showSetupError(
@@ -1653,14 +1998,10 @@
       return;
     }
 
-    /* Create Supabase client */
-
     client = window.supabase.createClient(
         window.SUPABASE_URL,
         window.SUPABASE_ANON_KEY
     );
-
-    /* Load appropriate page */
 
     if (currentRoute.mode === 'edit') {
       await loadEditor(currentRoute.value);
