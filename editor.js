@@ -1015,6 +1015,7 @@
             id="e-ack-add-agreement"
             type="button"
             class="secondary-action"
+            style="display:block !important; visibility:visible !important; opacity:1 !important; margin-top:15px;"
           >
             + Add Agreement
           </button>
