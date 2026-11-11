@@ -673,6 +673,14 @@
         >
           Opening
         </button>
+        
+        <button
+          class="editor-tab"
+          type="button"
+          data-tab="acknowledgment"
+        >
+          Acknowledgment
+        </button>
 
         <button
           class="editor-tab"
@@ -704,14 +712,6 @@
           data-tab="photos"
         >
           Photos
-        </button>
-        
-        <button
-          class="editor-tab"
-          type="button"
-          data-tab="acknowledgment"
-        >
-          Acknowledgment
         </button>
 
       </div>
