@@ -215,7 +215,7 @@
 
     if (!container) return;
 
-    const settings = settingsOverride || collectAcknowledgmentSettings();
+    const settings = settingsOverride || getAcknowledgmentSettings(guide);
     container.replaceChildren();
 
     settings.agreements.forEach(function (statement, index) {
