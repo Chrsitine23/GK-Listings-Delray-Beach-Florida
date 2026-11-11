@@ -184,12 +184,12 @@
     const checkboxInput = document.getElementById('e-ack-checkbox-text');
     const buttonInput = document.getElementById('e-ack-button-text');
 
-    const agreementInputs = Array.from(
-        document.querySelectorAll('#e-ack-agreements .e-ack-agreement')
-    );
+    const agreementContainer = document.getElementById('e-ack-agreements');
 
-    const agreements = agreementInputs.length > 0
-        ? agreementInputs.map(function (input) {
+    const agreements = agreementContainer
+        ? Array.from(
+            agreementContainer.querySelectorAll('.e-ack-agreement')
+        ).map(function (input) {
           return input.value.trim();
         }).filter(Boolean)
         : previous.agreements;
@@ -207,7 +207,6 @@
           : previous.button_text
     };
   }
-
 
   /* Render the editable agreement statements. */
 
