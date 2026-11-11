@@ -2315,6 +2315,11 @@
       custom_buttons: getDashboardCustomButtonsFromEditor()
     };
 
+    console.log(
+        'CUSTOM BUTTONS BEING SAVED:',
+        dashboard.custom_buttons
+    );
+
 
     // OPENING SETTINGS
     const locationInput = document.getElementById('e-opening_location');
