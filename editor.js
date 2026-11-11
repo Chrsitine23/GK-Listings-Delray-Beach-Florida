@@ -351,17 +351,46 @@
      APPLY GUIDE DATA TO WEBSITE
   ========================================================= */
 
+
+
   function applyGuide(g) {
     if (!g) return;
 
+    // PROPERTY NAME
     setText(
         'property-name',
         g.property_name || 'Welcome Home'
     );
 
+    // DASHBOARD SETTINGS
+    const dashboard = g.guide_data?.dashboard || {};
+
+    setText(
+        'dashboard-eyebrow',
+        dashboard.eyebrow || 'YOUR STAY • YOUR GUIDE'
+    );
+
+    setText(
+        'dashboard-heading',
+        dashboard.heading || 'Settle in.'
+    );
+
+    setText(
+        'dashboard-highlight',
+        dashboard.highlight || 'Enjoy more.'
+    );
+
+    setText(
+        'dashboard-description',
+        dashboard.subtitle ||
+        'Everything you need for a comfortable stay.'
+    );
+
+    // EXISTING SETTINGS
     applyOpeningSettings(g);
     applyAcknowledgmentSettings(g);
 
+    // WELCOME PAGE
     setText(
         'welcome-title',
         g.welcome_title || 'Welcome! 👋'
@@ -382,12 +411,7 @@
         g.address || ''
     );
 
-    setText(
-        'dashboard-description',
-        g.welcome_message ||
-        'Everything you need for a comfortable stay.'
-    );
-
+    // WIFI AND CONTACT
     setText('wifi-name', g.wifi_name || '');
     setText('wifi-pass', g.wifi_password || '');
     setText('host-name', g.host_name || '');
@@ -395,24 +419,26 @@
     setText('check-in-time', g.check_in || '');
     setText('check-out-time', g.check_out || '');
 
+    // GOOGLE MAPS
     if (g.google_maps_url) {
-      document
-          .querySelectorAll(
-              'a[href*="google.com/maps"], a[data-map-link]'
-          )
-          .forEach(function (link) {
-            link.href = g.google_maps_url;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-          });
+      document.querySelectorAll(
+          'a[href*="google.com/maps"], a[data-map-link]'
+      ).forEach(function (link) {
+        link.href = g.google_maps_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      });
     }
 
     updateEditorFields(g);
   }
 
+
+
   /* =========================================================
      UPDATE EDITOR INPUTS
   ========================================================= */
+
 
   function updateEditorFields(g) {
     if (!g) return;
@@ -435,11 +461,36 @@
       setValue('e-' + key, g[key]);
     });
 
+    // DASHBOARD SETTINGS
+    const dashboard = g.guide_data?.dashboard || {};
+
+    setValue(
+        'e-dashboard-eyebrow',
+        dashboard.eyebrow || 'YOUR STAY • YOUR GUIDE'
+    );
+
+    setValue(
+        'e-dashboard-heading',
+        dashboard.heading || 'Settle in.'
+    );
+
+    setValue(
+        'e-dashboard-highlight',
+        dashboard.highlight || 'Enjoy more.'
+    );
+
+    setValue(
+        'e-dashboard-subtitle',
+        dashboard.subtitle || ''
+    );
+
+    // OPENING SETTINGS
     const opening = getOpeningSettings(g);
 
     setValue('e-opening_location', opening.location);
     setValue('e-opening_button_text', opening.button_text);
 
+    // ACKNOWLEDGMENT SETTINGS
     const acknowledgment = getAcknowledgmentSettings(g);
 
     const enabledInput = document.getElementById('e-ack-enabled');
@@ -456,6 +507,7 @@
     renderOpeningCoverPreview();
     renderAcknowledgmentEditor();
   }
+
 
   /* =========================================================
      ERROR MESSAGE
@@ -687,7 +739,7 @@
           type="button"
           data-tab="welcome"
         >
-          Welcome
+          Dashboard
         </button>
 
         <button
@@ -791,65 +843,104 @@
           </p>
 
         </section>
-
-        <!-- WELCOME -->
-
+                
+        <!-- DASHBOARD -->
+        
         <section
           class="editor-section"
           data-section="welcome"
         >
-
+          <h3>Dashboard Settings</h3>
+        
+          <p>
+            Customize the welcome text and the buttons guests see on your dashboard.
+          </p>
+        
           <label>
-            Property name
-
+            Property Display Name
+        
             <input
               id="e-property_name"
               type="text"
-              placeholder="Angelica Aqua Vista"
+              placeholder="Your Property Name"
             >
           </label>
-
+        
           <label>
-            Welcome title
-
+            Dashboard Eyebrow
+        
             <input
-              id="e-welcome_title"
+              id="e-dashboard-eyebrow"
               type="text"
-              placeholder="Welcome!"
+              maxlength="80"
+              placeholder="YOUR STAY • YOUR GUIDE"
             >
           </label>
-
+        
           <label>
-            Welcome message
-
-            <textarea
-              id="e-welcome_message"
-              rows="5"
-              placeholder="Welcome to your stay..."
-            ></textarea>
-          </label>
-
-          <label>
-            Address
-
-            <textarea
-              id="e-address"
-              rows="3"
-              placeholder="Your complete property address"
-            ></textarea>
-          </label>
-
-          <label>
-            Google Maps link
-
+            Main Heading
+        
             <input
-              id="e-google_maps_url"
-              type="url"
-              placeholder="https://maps.google.com/..."
+              id="e-dashboard-heading"
+              type="text"
+              maxlength="80"
+              placeholder="Settle in."
             >
           </label>
-
+        
+          <label>
+            Heading Highlight
+        
+            <input
+              id="e-dashboard-highlight"
+              type="text"
+              maxlength="80"
+              placeholder="Enjoy more."
+            >
+          </label>
+        
+          <label>
+            Welcome Subtitle
+        
+            <textarea
+              id="e-dashboard-subtitle"
+              rows="3"
+              maxlength="300"
+              placeholder="Everything you need for a comfortable stay."
+            ></textarea>
+          </label>
+        
+          <hr>
+        
+          <h3>Custom Guide Buttons</h3>
+        
+          <p>
+            Add extra sections to your guest dashboard, such as SPA,
+            Gym, Basketball Court, or other property facilities.
+          </p>
+        
+          <div id="e-dashboard-custom-buttons">
+            No custom buttons added yet.
+          </div>
+        
+          <button
+            id="e-dashboard-add-button"
+            type="button"
+            class="secondary-action"
+          >
+            + Add Custom Button
+          </button>
+        
+          <p>
+            You can customize each button's name, subtitle, icon,
+            destination, visibility, and order.
+          </p>
+        
+          <p class="ack-editor-note">
+            Remember to click Save Changes after editing your dashboard.
+          </p>
         </section>
+
 
         <!-- STAY -->
 
@@ -1944,6 +2035,7 @@
      COLLECT FORM DATA
   ========================================================= */
 
+
   function collectChanges() {
     const fields = [
       'property_name',
@@ -1962,36 +2054,53 @@
     const values = {};
 
     fields.forEach(function (key) {
-      const input = document.getElementById(
-          'e-' + key
-      );
+      const input = document.getElementById('e-' + key);
 
-      if (!input) {
-        values[key] = null;
-        return;
-      }
+      // Do not overwrite existing data when a field
+      // is not present in the current editor.
+      if (!input) return;
 
       const value = input.value.trim();
 
-      values[key] = value === ''
-          ? null
-          : value;
+      values[key] = value === '' ? null : value;
     });
 
-    const locationInput = document.getElementById(
-        'e-opening_location'
-    );
+    // PRESERVE EXISTING GUIDE DATA
+    const previousGuideData = guide?.guide_data || {};
+    const previousOpening = previousGuideData.opening || {};
+    const previousAcknowledgment = previousGuideData.acknowledgment || {};
+    const previousDashboard = previousGuideData.dashboard || {};
 
-    const buttonInput = document.getElementById(
-        'e-opening_button_text'
-    );
+    // DASHBOARD SETTINGS
+    const dashboard = {
+      ...previousDashboard,
 
-    const previousOpening = guide?.guide_data?.opening || {};
+      eyebrow:
+          document.getElementById('e-dashboard-eyebrow')?.value.trim()
+          || 'YOUR STAY • YOUR GUIDE',
 
-    const previousAcknowledgment =
-        guide?.guide_data?.acknowledgment || {};
+      heading:
+          document.getElementById('e-dashboard-heading')?.value.trim()
+          || 'Settle in.',
+
+      highlight:
+          document.getElementById('e-dashboard-highlight')?.value.trim()
+          || 'Enjoy more.',
+
+      subtitle:
+          document.getElementById('e-dashboard-subtitle')?.value.trim()
+          || ''
+    };
+
+    // OPENING SETTINGS
+    const locationInput = document.getElementById('e-opening_location');
+    const buttonInput = document.getElementById('e-opening_button_text');
 
     values.guide_data = {
+      ...previousGuideData,
+
+      dashboard: dashboard,
+
       opening: {
         ...previousOpening,
 
@@ -2014,6 +2123,7 @@
 
     return values;
   }
+
 
   /* =========================================================
      SAVE GUIDE
