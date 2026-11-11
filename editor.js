@@ -954,9 +954,6 @@
           </div>
 
         </section>
-
-      </div>
-      
       
       <!-- ACKNOWLEDGMENT -->
      
@@ -1044,6 +1041,8 @@
           Remember to click Save Changes to store your acknowledgment settings.
         </p>
       </section>
+      
+      </div>
 
       <div class="editor-actions">
 
