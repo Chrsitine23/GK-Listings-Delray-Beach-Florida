@@ -365,6 +365,10 @@
     // DASHBOARD SETTINGS
     const dashboard = g.guide_data?.dashboard || {};
 
+    renderDashboardCustomButtons(
+        dashboard.custom_buttons || []
+    );
+
     setText(
         'dashboard-eyebrow',
         dashboard.eyebrow || 'YOUR STAY • YOUR GUIDE'
@@ -463,6 +467,10 @@
 
     // DASHBOARD SETTINGS
     const dashboard = g.guide_data?.dashboard || {};
+
+    renderDashboardCustomButtons(
+        dashboard.custom_buttons || []
+    );
 
     setValue(
         'e-dashboard-eyebrow',
@@ -654,6 +662,155 @@
           error.message
       );
     }
+  }
+
+  function getDashboardCustomButtonsFromEditor() {
+    const container = document.getElementById(
+        'e-dashboard-custom-buttons'
+    );
+
+    if (!container) return [];
+
+    return Array.from(
+        container.querySelectorAll('.dashboard-custom-card')
+    ).map(function (card) {
+      return {
+        id: card.dataset.buttonId || crypto.randomUUID(),
+
+        name: card.querySelector('[data-field="name"]')?.value.trim() || '',
+
+        subtitle: card.querySelector('[data-field="subtitle"]')?.value.trim() || '',
+
+        icon: card.querySelector('[data-field="icon"]')?.value.trim() || 'sparkles',
+
+        destination_type: card.querySelector('[data-field="destination_type"]')?.value || 'custom_info',
+
+        destination_page: card.querySelector('[data-field="destination_page"]')?.value || '',
+
+        external_url: card.querySelector('[data-field="external_url"]')?.value.trim() || '',
+
+        visible: card.querySelector('[data-field="visible"]')?.checked ?? true
+      };
+    });
+  }
+
+
+  function renderDashboardCustomButtons(buttons) {
+    const container = document.getElementById(
+        'e-dashboard-custom-buttons'
+    );
+
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (!buttons || buttons.length === 0) {
+      container.textContent = 'No custom buttons added yet.';
+      return;
+    }
+
+    buttons.forEach(function (item, index) {
+      const card = document.createElement('div');
+
+      card.className = 'dashboard-custom-card';
+      card.dataset.buttonId = item.id || crypto.randomUUID();
+
+      card.style.cssText = `
+      border:1px solid #deded8;
+      border-radius:12px;
+      padding:14px;
+      margin:12px 0;
+      background:#fff;
+    `;
+
+      card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <strong>Custom Button ${index + 1}</strong>
+
+        <div style="display:flex;gap:6px;">
+          <button type="button" data-action="up">↑</button>
+          <button type="button" data-action="down">↓</button>
+          <button type="button" data-action="delete">Delete</button>
+        </div>
+      </div>
+
+      <label>
+        Button Name
+        <input data-field="name" type="text" maxlength="60"
+          placeholder="SPA" value="">
+      </label>
+
+      <label>
+        Subtitle
+        <input data-field="subtitle" type="text" maxlength="100"
+          placeholder="Relax and recharge" value="">
+      </label>
+
+      <label>
+        Icon Name (Lucide)
+        <input data-field="icon" type="text"
+          placeholder="sparkles" value="">
+      </label>
+
+      <label>
+        Destination Type
+        <select data-field="destination_type">
+          <option value="custom_info">Custom Information Page</option>
+          <option value="existing_page">Existing Guide Page</option>
+          <option value="external_link">External Link</option>
+        </select>
+      </label>
+
+      <label>
+        Existing Guide Page
+        <select data-field="destination_page">
+          <option value="">Choose a page</option>
+          <option value="welcome">Welcome</option>
+          <option value="checkin">Check In</option>
+          <option value="checkout">Check Out</option>
+          <option value="location">Location</option>
+          <option value="wifi">WiFi</option>
+          <option value="amenities">Amenities</option>
+          <option value="pool">Pool</option>
+          <option value="activities">Activities</option>
+          <option value="rules">House Rules</option>
+          <option value="outdoor">Outdoor</option>
+          <option value="parking">Parking</option>
+          <option value="emergency">Emergency</option>
+          <option value="contact">Contact</option>
+        </select>
+      </label>
+
+      <label>
+        External URL
+        <input data-field="external_url" type="url"
+          placeholder="https://example.com" value="">
+      </label>
+
+      <label style="display:flex;align-items:center;gap:8px;">
+        <input data-field="visible" type="checkbox" checked>
+        Show this button on the guest dashboard
+      </label>
+    `;
+
+      card.querySelector('[data-field="name"]').value = item.name || '';
+      card.querySelector('[data-field="subtitle"]').value = item.subtitle || '';
+      card.querySelector('[data-field="icon"]').value = item.icon || 'sparkles';
+
+      card.querySelector('[data-field="destination_type"]').value =
+          item.destination_type || 'custom_info';
+
+      card.querySelector('[data-field="destination_page"]').value =
+          item.destination_page || '';
+
+      card.querySelector('[data-field="external_url"]').value =
+          item.external_url || '';
+
+      card.querySelector('[data-field="visible"]').checked =
+          item.visible !== false;
+
+      container.appendChild(card);
+    });
   }
 
   /* =========================================================
@@ -1183,6 +1340,69 @@
     `;
 
     document.body.appendChild(panel);
+
+
+    // INITIALIZE CUSTOM DASHBOARD BUTTONS
+    renderDashboardCustomButtons(
+        guide?.guide_data?.dashboard?.custom_buttons || []
+    );
+
+    // ADD CUSTOM BUTTON
+    document.getElementById('e-dashboard-add-button')
+        .addEventListener('click', function () {
+          const buttons = getDashboardCustomButtonsFromEditor();
+
+          buttons.push({
+            id: crypto.randomUUID(),
+            name: '',
+            subtitle: '',
+            icon: 'sparkles',
+            destination_type: 'custom_info',
+            destination_page: '',
+            external_url: '',
+            visible: true
+          });
+
+          renderDashboardCustomButtons(buttons);
+        });
+
+    // DELETE, MOVE UP, MOVE DOWN
+    document.getElementById('e-dashboard-custom-buttons')
+        .addEventListener('click', function (event) {
+          const button = event.target.closest('[data-action]');
+
+          if (!button) return;
+
+          const card = button.closest('.dashboard-custom-card');
+
+          if (!card) return;
+
+          const buttons = getDashboardCustomButtonsFromEditor();
+
+          const index = buttons.findIndex(function (item) {
+            return item.id === card.dataset.buttonId;
+          });
+
+          if (index < 0) return;
+
+          const action = button.dataset.action;
+
+          if (action === 'delete') {
+            buttons.splice(index, 1);
+          }
+
+          if (action === 'up' && index > 0) {
+            const item = buttons.splice(index, 1)[0];
+            buttons.splice(index - 1, 0, item);
+          }
+
+          if (action === 'down' && index < buttons.length - 1) {
+            const item = buttons.splice(index, 1)[0];
+            buttons.splice(index + 1, 0, item);
+          }
+
+          renderDashboardCustomButtons(buttons);
+        });
 
     updateEditorFields(guide);
     renderOpeningCoverPreview();
@@ -2072,6 +2292,7 @@
     const previousDashboard = previousGuideData.dashboard || {};
 
     // DASHBOARD SETTINGS
+
     const dashboard = {
       ...previousDashboard,
 
@@ -2089,8 +2310,11 @@
 
       subtitle:
           document.getElementById('e-dashboard-subtitle')?.value.trim()
-          || ''
+          || '',
+
+      custom_buttons: getDashboardCustomButtonsFromEditor()
     };
+
 
     // OPENING SETTINGS
     const locationInput = document.getElementById('e-opening_location');
