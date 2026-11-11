@@ -1107,7 +1107,7 @@
     updateEditorFields(guide);
     renderOpeningCoverPreview();
     renderEditorPhotos();
-    renderAcknowledgmentEditor(settings);
+    renderAcknowledgmentEditor();
     updatePublishControls();
 
     /* -----------------------------------------
