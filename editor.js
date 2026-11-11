@@ -4,7 +4,7 @@
 
   /* =========================================================
      ANGELICA AQUA VISTA — CLIENT EDITOR
-     Works with:
+     Routes:
        /edit/YOUR_EDIT_TOKEN
        /g/YOUR_PUBLIC_ID
        ?edit=YOUR_EDIT_TOKEN
@@ -161,35 +161,12 @@
         'Everything you need for a comfortable stay.'
     );
 
-    setText(
-        'wifi-name',
-        g.wifi_name || ''
-    );
-
-    setText(
-        'wifi-pass',
-        g.wifi_password || ''
-    );
-
-    setText(
-        'host-name',
-        g.host_name || ''
-    );
-
-    setText(
-        'host-phone',
-        g.host_phone || ''
-    );
-
-    setText(
-        'check-in-time',
-        g.check_in || ''
-    );
-
-    setText(
-        'check-out-time',
-        g.check_out || ''
-    );
+    setText('wifi-name', g.wifi_name || '');
+    setText('wifi-pass', g.wifi_password || '');
+    setText('host-name', g.host_name || '');
+    setText('host-phone', g.host_phone || '');
+    setText('check-in-time', g.check_in || '');
+    setText('check-out-time', g.check_out || '');
 
     if (g.google_maps_url) {
       document
@@ -237,8 +214,9 @@
   ========================================================= */
 
   function showSetupError(message) {
-    const existing =
-        document.querySelector('.app-setup-error');
+    const existing = document.querySelector(
+        '.app-setup-error'
+    );
 
     if (existing) {
       existing.remove();
@@ -250,9 +228,7 @@
 
     box.innerHTML =
         '<strong>Welcome Guide</strong>' +
-        '<p>' +
-        escapeHtml(message) +
-        '</p>' +
+        '<p>' + escapeHtml(message) + '</p>' +
         '<button ' +
         'onclick="this.parentElement.remove()" ' +
         'style="' +
@@ -292,28 +268,25 @@
           .eq('published', true)
           .maybeSingle();
 
-      const data = result.data;
-      const error = result.error;
-
-      if (error) {
+      if (result.error) {
         showSetupError(
             'Could not load the guest guide: ' +
-            error.message
+            result.error.message
         );
         return;
       }
 
-      if (!data) {
+      if (!result.data) {
         showSetupError(
             'This guest guide does not exist or has not been published yet.'
         );
         return;
       }
 
-      guide = data;
+      guide = result.data;
       publicId = id;
 
-      applyGuide(data);
+      applyGuide(guide);
 
     } catch (error) {
       showSetupError(
@@ -350,20 +323,17 @@
           }
       );
 
-      const data = result.data;
-      const error = result.error;
-
-      if (error) {
+      if (result.error) {
         showSetupError(
             'Editor could not be opened: ' +
-            error.message
+            result.error.message
         );
         return;
       }
 
-      guide = Array.isArray(data)
-          ? data[0]
-          : data;
+      guide = Array.isArray(result.data)
+          ? result.data[0]
+          : result.data;
 
       if (!guide) {
         showSetupError(
@@ -376,7 +346,6 @@
       publicId = guide.public_id;
 
       applyGuide(guide);
-
       createEditor();
 
     } catch (error) {
@@ -410,9 +379,7 @@
             CLIENT EDITOR
           </span>
 
-          <h2>
-            Welcome Guide
-          </h2>
+          <h2>Welcome Guide</h2>
         </div>
 
         <button
@@ -432,6 +399,21 @@
         id="editor-status"
       >
         Editing your guide
+      </div>
+
+      <div
+        id="publish-status"
+        style="
+          margin:10px 0;
+          padding:12px;
+          border-radius:8px;
+          background:#f1f3f1;
+          color:#31483d;
+          font-size:13px;
+          font-weight:600;
+        "
+      >
+        Checking publication status...
       </div>
 
       <div class="editor-tabs">
@@ -650,6 +632,22 @@
         </button>
 
         <button
+          id="publish-guide"
+          class="save-guide"
+          type="button"
+        >
+          Publish Guide
+        </button>
+
+        <button
+          id="unpublish-guide"
+          class="secondary-action"
+          type="button"
+        >
+          Unpublish Guide
+        </button>
+
+        <button
           id="guest-preview"
           class="secondary-action"
           type="button"
@@ -670,12 +668,9 @@
 
     document.body.appendChild(panel);
 
-    /* -----------------------------------------
-       Fill fields and show existing photos
-    ----------------------------------------- */
-
     updateEditorFields(guide);
     renderEditorPhotos();
+    updatePublishControls();
 
     /* -----------------------------------------
        Tabs
@@ -724,18 +719,15 @@
 
     document
         .getElementById('close-editor')
-        .addEventListener(
-            'click',
-            function () {
+        .addEventListener('click', function () {
 
-              panel.remove();
+          panel.remove();
 
-              document.body.classList.remove(
-                  'editor-mode'
-              );
+          document.body.classList.remove(
+              'editor-mode'
+          );
 
-            }
-        );
+        });
 
     /* -----------------------------------------
        Save
@@ -743,10 +735,23 @@
 
     document
         .getElementById('save-guide')
-        .addEventListener(
-            'click',
-            saveGuide
-        );
+        .addEventListener('click', saveGuide);
+
+    /* -----------------------------------------
+       Publish
+    ----------------------------------------- */
+
+    document
+        .getElementById('publish-guide')
+        .addEventListener('click', publishGuide);
+
+    /* -----------------------------------------
+       Unpublish
+    ----------------------------------------- */
+
+    document
+        .getElementById('unpublish-guide')
+        .addEventListener('click', unpublishGuide);
 
     /* -----------------------------------------
        Preview
@@ -754,30 +759,34 @@
 
     document
         .getElementById('guest-preview')
-        .addEventListener(
-            'click',
-            function () {
+        .addEventListener('click', function () {
 
-              if (!publicId) {
-                setStatus(
-                    'Guest guide ID is missing.',
-                    false
-                );
-                return;
-              }
+          if (!publicId) {
+            setStatus(
+                'Guest guide ID is missing.',
+                false
+            );
+            return;
+          }
 
-              const url =
-                  '/g/' +
-                  encodeURIComponent(publicId);
+          if (guide?.published !== true) {
+            setStatus(
+                'Publish your guide before opening the guest link.',
+                false
+            );
+            return;
+          }
 
-              window.open(
-                  url,
-                  '_blank',
-                  'noopener'
-              );
+          const url =
+              '/g/' + encodeURIComponent(publicId);
 
-            }
-        );
+          window.open(
+              url,
+              '_blank',
+              'noopener'
+          );
+
+        });
 
     /* -----------------------------------------
        Copy guest link
@@ -785,10 +794,7 @@
 
     document
         .getElementById('copy-link')
-        .addEventListener(
-            'click',
-            copyGuestLink
-        );
+        .addEventListener('click', copyGuestLink);
 
     /* -----------------------------------------
        Photo upload
@@ -796,10 +802,7 @@
 
     document
         .getElementById('e-photo-upload')
-        .addEventListener(
-            'change',
-            uploadGuidePhotos
-        );
+        .addEventListener('change', uploadGuidePhotos);
 
     /* -----------------------------------------
        Keyboard shortcut
@@ -815,14 +818,237 @@
               event.key.toLowerCase() === 's' &&
               document.getElementById('editor-panel')
           ) {
-
             event.preventDefault();
-
             saveGuide();
           }
 
         }
     );
+  }
+
+  /* =========================================================
+     PUBLISH STATUS / BUTTONS
+  ========================================================= */
+
+  function updatePublishControls() {
+    const status = document.getElementById(
+        'publish-status'
+    );
+
+    const publishButton = document.getElementById(
+        'publish-guide'
+    );
+
+    const unpublishButton = document.getElementById(
+        'unpublish-guide'
+    );
+
+    if (!status || !publishButton || !unpublishButton) {
+      return;
+    }
+
+    const isPublished = guide?.published === true;
+
+    if (isPublished) {
+      status.textContent =
+          'Published — your guest guide is live.';
+
+      status.style.background = '#e7f3e9';
+      status.style.color = '#25643a';
+
+      publishButton.hidden = true;
+      unpublishButton.hidden = false;
+
+    } else {
+      status.textContent =
+          'Draft — your guide is not visible to guests yet.';
+
+      status.style.background = '#f1f3f1';
+      status.style.color = '#31483d';
+
+      publishButton.hidden = false;
+      unpublishButton.hidden = true;
+    }
+  }
+
+  /* =========================================================
+     PUBLISH GUIDE
+  ========================================================= */
+
+  async function publishGuide() {
+    if (!editorToken || !publicId) {
+      setStatus(
+          'Editor information is missing.',
+          false
+      );
+      return;
+    }
+
+    if (guide?.published === true) {
+      setStatus('This guide is already published.');
+      return;
+    }
+
+    const confirmed = window.confirm(
+        'Publish this guide? Guests with the guest link will be able to view it.'
+    );
+
+    if (!confirmed) return;
+
+    const publishButton = document.getElementById(
+        'publish-guide'
+    );
+
+    const unpublishButton = document.getElementById(
+        'unpublish-guide'
+    );
+
+    if (publishButton) publishButton.disabled = true;
+    if (unpublishButton) unpublishButton.disabled = true;
+
+    try {
+      /* Save all recent edits first */
+
+      setStatus('Saving your changes before publishing...');
+
+      const saved = await saveGuide();
+
+      if (!saved) {
+        setStatus(
+            'Publishing stopped because your changes could not be saved. Please try again.',
+            false
+        );
+        return;
+      }
+
+      /* Call secure Supabase publishing function */
+
+      setStatus('Publishing your guide...');
+
+      const result = await client.rpc(
+          'publish_guide_by_token',
+          {
+            p_edit_token: editorToken,
+            p_published: true
+          }
+      );
+
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+
+      const updatedGuide = Array.isArray(result.data)
+          ? result.data[0]
+          : result.data;
+
+      if (!updatedGuide) {
+        throw new Error(
+            'The guide could not be published. Please check your editing link.'
+        );
+      }
+
+      guide = updatedGuide;
+      publicId = guide.public_id;
+
+      applyGuide(guide);
+      updatePublishControls();
+
+      setStatus(
+          'Your guide is now published successfully!'
+      );
+
+    } catch (error) {
+      setStatus(
+          'Could not publish: ' + error.message,
+          false
+      );
+
+    } finally {
+      if (publishButton) publishButton.disabled = false;
+      if (unpublishButton) unpublishButton.disabled = false;
+    }
+  }
+
+  /* =========================================================
+     UNPUBLISH GUIDE
+  ========================================================= */
+
+  async function unpublishGuide() {
+    if (!editorToken || !publicId) {
+      setStatus(
+          'Editor information is missing.',
+          false
+      );
+      return;
+    }
+
+    if (guide?.published !== true) {
+      setStatus('This guide is already unpublished.');
+      return;
+    }
+
+    const confirmed = window.confirm(
+        'Unpublish this guide? Guests will no longer be able to view it using the guest link.'
+    );
+
+    if (!confirmed) return;
+
+    const publishButton = document.getElementById(
+        'publish-guide'
+    );
+
+    const unpublishButton = document.getElementById(
+        'unpublish-guide'
+    );
+
+    if (publishButton) publishButton.disabled = true;
+    if (unpublishButton) unpublishButton.disabled = true;
+
+    try {
+      setStatus('Unpublishing your guide...');
+
+      const result = await client.rpc(
+          'publish_guide_by_token',
+          {
+            p_edit_token: editorToken,
+            p_published: false
+          }
+      );
+
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+
+      const updatedGuide = Array.isArray(result.data)
+          ? result.data[0]
+          : result.data;
+
+      if (!updatedGuide) {
+        throw new Error(
+            'The guide could not be unpublished. Please check your editing link.'
+        );
+      }
+
+      guide = updatedGuide;
+      publicId = guide.public_id;
+
+      applyGuide(guide);
+      updatePublishControls();
+
+      setStatus(
+          'Your guide has been unpublished. Guests can no longer view it.'
+      );
+
+    } catch (error) {
+      setStatus(
+          'Could not unpublish: ' + error.message,
+          false
+      );
+
+    } finally {
+      if (publishButton) publishButton.disabled = false;
+      if (unpublishButton) unpublishButton.disabled = false;
+    }
   }
 
   /* =========================================================
@@ -1085,6 +1311,7 @@
 
   /* =========================================================
      SAVE GUIDE
+     Returns true when successful, false when unsuccessful.
   ========================================================= */
 
   async function saveGuide() {
@@ -1093,14 +1320,20 @@
           'Editor token is missing.',
           false
       );
-      return;
+      return false;
     }
 
     const button = document.getElementById(
         'save-guide'
     );
 
-    if (!button) return;
+    if (!button) {
+      setStatus(
+          'Save button could not be found.',
+          false
+      );
+      return false;
+    }
 
     const values = collectChanges();
 
@@ -1118,34 +1351,42 @@
           }
       );
 
-      const data = result.data;
-      const error = result.error;
-
-      if (error) {
+      if (result.error) {
         setStatus(
-            'Could not save: ' + error.message,
+            'Could not save: ' + result.error.message,
             false
         );
-        return;
+        return false;
       }
 
-      guide = Array.isArray(data)
-          ? data[0]
-          : data;
+      const updatedGuide = Array.isArray(result.data)
+          ? result.data[0]
+          : result.data;
 
-      if (guide) {
-        applyGuide(guide);
-      } else {
-        applyGuide(values);
+      if (!updatedGuide) {
+        setStatus(
+            'The server did not return the updated guide. Please try again.',
+            false
+        );
+        return false;
       }
+
+      guide = updatedGuide;
+
+      applyGuide(guide);
+      updatePublishControls();
 
       setStatus('Saved successfully ✓');
+
+      return true;
 
     } catch (error) {
       setStatus(
           'Could not save: ' + error.message,
           false
       );
+
+      return false;
 
     } finally {
       button.disabled = false;
@@ -1161,6 +1402,14 @@
     if (!publicId) {
       setStatus(
           'Guest guide ID is missing.',
+          false
+      );
+      return;
+    }
+
+    if (guide?.published !== true) {
+      setStatus(
+          'Publish your guide before sharing the guest link.',
           false
       );
       return;
@@ -1186,150 +1435,146 @@
 
         temporary.select();
 
-        document.execCommand('copy');
+        const copied = document.execCommand('copy');
 
         temporary.remove();
+
+        if (!copied) {
+          throw new Error('Copy command failed.');
+        }
 
         setStatus('Guest link copied ✓');
 
       } catch (fallbackError) {
         setStatus(
-            'Could not copy the link. Please copy it manually.',
+            'Could not copy the link. Please copy it manually: ' + url,
             false
         );
       }
     }
   }
 
-  
-/* =========================================
-   QUICK TOUR LIGHTBOX
-========================================= */
+  /* =========================================================
+     QUICK TOUR LIGHTBOX
+  ========================================================= */
 
-let tourPhotos = [];
-let currentTourPhoto = 0;
+  let tourPhotos = [];
+  let currentTourPhoto = 0;
 
+  /* OPEN LIGHTBOX */
 
-/* OPEN LIGHTBOX */
-
-function openTourLightbox(index) {
-
+  function openTourLightbox(index) {
     tourPhotos = Array.from(
         document.querySelectorAll(
-            ".tour-masonry .tour-photo img"
+            '.tour-masonry .tour-photo img'
         )
     );
 
-    currentTourPhoto = tourPhotos.indexOf(
-        tourPhotos[index]
+    currentTourPhoto = index;
+
+    if (
+        currentTourPhoto < 0 ||
+        currentTourPhoto >= tourPhotos.length
+    ) {
+      return;
+    }
+
+    const lightbox = document.getElementById(
+        'tour-lightbox'
     );
 
-    if (currentTourPhoto === -1) {
-        return;
-    }
+    if (!lightbox) return;
 
     updateTourLightbox();
 
-    const lightbox = document.getElementById(
-        "tour-lightbox"
-    );
+    lightbox.classList.add('active');
 
-    lightbox.classList.add("active");
+    lightbox.setAttribute('aria-hidden', 'false');
 
-    lightbox.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = 'hidden';
+  }
 
-    document.body.style.overflow = "hidden";
-}
+  /* UPDATE IMAGE */
 
-
-/* UPDATE IMAGE */
-
-function updateTourLightbox() {
-
+  function updateTourLightbox() {
     const image = document.getElementById(
-        "lightbox-image"
+        'lightbox-image'
     );
 
     const current = document.getElementById(
-        "lightbox-current"
+        'lightbox-current'
     );
 
     const total = document.getElementById(
-        "lightbox-total"
+        'lightbox-total'
     );
 
-    const selectedPhoto = tourPhotos[
-        currentTourPhoto
-    ];
+    const selectedPhoto = tourPhotos[currentTourPhoto];
+
+    if (!selectedPhoto || !image) return;
 
     image.src = selectedPhoto.src;
-
     image.alt = selectedPhoto.alt;
 
-    current.textContent = currentTourPhoto + 1;
+    if (current) {
+      current.textContent = currentTourPhoto + 1;
+    }
 
-    total.textContent = tourPhotos.length;
+    if (total) {
+      total.textContent = tourPhotos.length;
+    }
+  }
 
-}
+  /* NEXT / PREVIOUS PHOTO */
 
-
-/* NEXT / PREVIOUS PHOTO */
-
-function changeTourPhoto(direction) {
-
+  function changeTourPhoto(direction) {
     if (tourPhotos.length === 0) {
-        return;
+      return;
     }
 
     currentTourPhoto += direction;
 
-    /* LOOP THROUGH PHOTOS */
-
     if (currentTourPhoto >= tourPhotos.length) {
-        currentTourPhoto = 0;
+      currentTourPhoto = 0;
     }
 
     if (currentTourPhoto < 0) {
-        currentTourPhoto = tourPhotos.length - 1;
+      currentTourPhoto = tourPhotos.length - 1;
     }
 
     updateTourLightbox();
+  }
 
-}
+  /* CLOSE LIGHTBOX */
 
-
-/* CLOSE LIGHTBOX */
-
-function closeTourLightbox() {
-
+  function closeTourLightbox() {
     const lightbox = document.getElementById(
-        "tour-lightbox"
+        'tour-lightbox'
     );
 
-    lightbox.classList.remove("active");
+    if (!lightbox) return;
 
-    lightbox.setAttribute("aria-hidden", "true");
+    lightbox.classList.remove('active');
 
-    document.body.style.overflow = "";
+    lightbox.setAttribute('aria-hidden', 'true');
 
-}
+    document.body.style.overflow = '';
+  }
 
+  /* CLICK PHOTO TO OPEN */
 
-/* CLICK PHOTO TO OPEN */
-
-document.addEventListener("click", function(event) {
-
+  document.addEventListener('click', function (event) {
     const clickedImage = event.target.closest(
-        ".tour-masonry .tour-photo img"
+        '.tour-masonry .tour-photo img'
     );
 
     if (!clickedImage) {
-        return;
+      return;
     }
 
     tourPhotos = Array.from(
         document.querySelectorAll(
-            ".tour-masonry .tour-photo img"
+            '.tour-masonry .tour-photo img'
         )
     );
 
@@ -1338,49 +1583,45 @@ document.addEventListener("click", function(event) {
     );
 
     openTourLightbox(photoIndex);
+  });
 
-});
+  /* CLICK OUTSIDE IMAGE TO CLOSE */
 
+  const tourLightbox = document.getElementById(
+      'tour-lightbox'
+  );
 
-/* CLICK OUTSIDE IMAGE TO CLOSE */
-
-document.getElementById(
-    "tour-lightbox"
-).addEventListener("click", function(event) {
-
-    if (event.target === this) {
+  if (tourLightbox) {
+    tourLightbox.addEventListener('click', function (event) {
+      if (event.target === this) {
         closeTourLightbox();
-    }
+      }
+    });
+  }
 
-});
+  /* KEYBOARD CONTROLS */
 
-
-/* KEYBOARD CONTROLS */
-
-document.addEventListener("keydown", function(event) {
-
+  document.addEventListener('keydown', function (event) {
     const lightbox = document.getElementById(
-        "tour-lightbox"
+        'tour-lightbox'
     );
 
-    if (!lightbox.classList.contains("active")) {
-        return;
+    if (!lightbox || !lightbox.classList.contains('active')) {
+      return;
     }
 
-    if (event.key === "Escape") {
-        closeTourLightbox();
+    if (event.key === 'Escape') {
+      closeTourLightbox();
     }
 
-    if (event.key === "ArrowRight") {
-        changeTourPhoto(1);
+    if (event.key === 'ArrowRight') {
+      changeTourPhoto(1);
     }
 
-    if (event.key === "ArrowLeft") {
-        changeTourPhoto(-1);
+    if (event.key === 'ArrowLeft') {
+      changeTourPhoto(-1);
     }
-
-});
-
+  });
 
   /* =========================================================
      INITIALIZE
@@ -1389,9 +1630,7 @@ document.addEventListener("keydown", function(event) {
   async function init() {
     const currentRoute = route();
 
-    /* -----------------------------------------
-       Check Supabase library
-    ----------------------------------------- */
+    /* Check Supabase library */
 
     if (
         !window.supabase ||
@@ -1403,31 +1642,25 @@ document.addEventListener("keydown", function(event) {
       return;
     }
 
-    /* -----------------------------------------
-       Check configuration
-    ----------------------------------------- */
+    /* Check configuration */
 
     if (!configReady()) {
       if (currentRoute.mode === 'edit') {
         showSetupError(
-            'Open supabase-config.js and add your Supabase Project URL and anon key.'
+            'Open supabase-config.js and add your Supabase Project URL and publishable key.'
         );
       }
       return;
     }
 
-    /* -----------------------------------------
-       Create Supabase client
-    ----------------------------------------- */
+    /* Create Supabase client */
 
     client = window.supabase.createClient(
         window.SUPABASE_URL,
         window.SUPABASE_ANON_KEY
     );
 
-    /* -----------------------------------------
-       Load appropriate page
-    ----------------------------------------- */
+    /* Load appropriate page */
 
     if (currentRoute.mode === 'edit') {
       await loadEditor(currentRoute.value);
@@ -1449,7 +1682,6 @@ document.addEventListener("keydown", function(event) {
         'DOMContentLoaded',
         init
     );
-
   } else {
     init();
   }
