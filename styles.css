@@ -2781,7 +2781,7 @@ body {
 .editor-body { flex:1; overflow:auto; padding:12px 18px 20px; }
 .editor-section { display:none; }
 .editor-section.active { display:block; }
-.editor-section label { display:block; font-size:12px; font-weight:800; margin:0 0 15px; color:#52635b; }
+.editor-section label { display:block; font-size:12px; font-weight:800; margin:0 0 2px; color:#52635b; }
 .editor-section input, .editor-section textarea { width:100%; box-sizing:border-box; margin-top:7px; padding:12px 13px; border:1px solid #d9d1c5; border-radius:10px; background:#fff; font:inherit; color:#25372f; outline:none; }
 .editor-section input:focus, .editor-section textarea:focus { border-color:#80988a; box-shadow:0 0 0 3px rgba(128,152,138,.15); }
 .editor-actions { padding:15px 18px 20px; border-top:1px solid #e7e1d7; background:#fffdf8; }
