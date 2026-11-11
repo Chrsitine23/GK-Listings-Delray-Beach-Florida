@@ -1,3 +1,4 @@
+
 (function () {
   'use strict';
 
@@ -38,7 +39,6 @@
         .split('/')
         .filter(Boolean);
 
-    // /edit/xxxxx
     if (path[0] === 'edit' && path[1]) {
       return {
         mode: 'edit',
@@ -46,7 +46,6 @@
       };
     }
 
-    // /g/xxxxx
     if (path[0] === 'g' && path[1]) {
       return {
         mode: 'guest',
@@ -54,8 +53,6 @@
       };
     }
 
-    // ?edit=xxxxx
-    // ?guide=xxxxx
     const params = new URLSearchParams(location.search);
 
     if (params.get('edit')) {
@@ -128,19 +125,16 @@
   function applyGuide(g) {
     if (!g) return;
 
-    // Property
     setText(
         'property-name',
         g.property_name || 'Welcome Home'
     );
 
-    // Cover
     setText(
         'cover-location-text',
         g.address || 'Your destination'
     );
 
-    // Welcome
     setText(
         'welcome-title',
         g.welcome_title || 'Welcome! 👋'
@@ -161,14 +155,12 @@
         g.address || ''
     );
 
-    // Dashboard
     setText(
         'dashboard-description',
         g.welcome_message ||
         'Everything you need for a comfortable stay.'
     );
 
-    // Wi-Fi
     setText(
         'wifi-name',
         g.wifi_name || ''
@@ -179,7 +171,6 @@
         g.wifi_password || ''
     );
 
-    // Host
     setText(
         'host-name',
         g.host_name || ''
@@ -190,7 +181,6 @@
         g.host_phone || ''
     );
 
-    // Check-in
     setText(
         'check-in-time',
         g.check_in || ''
@@ -201,7 +191,6 @@
         g.check_out || ''
     );
 
-    // Google Maps
     if (g.google_maps_url) {
       document
           .querySelectorAll(
@@ -214,7 +203,6 @@
           });
     }
 
-    // Update editor fields if editor exists
     updateEditorFields(g);
   }
 
@@ -439,14 +427,12 @@
 
       </div>
 
-
       <div
         class="editor-status"
         id="editor-status"
       >
         Editing your guide
       </div>
-
 
       <div class="editor-tabs">
 
@@ -474,8 +460,15 @@
           Contact
         </button>
 
-      </div>
+        <button
+          class="editor-tab"
+          type="button"
+          data-tab="photos"
+        >
+          Photos
+        </button>
 
+      </div>
 
       <div class="editor-body">
 
@@ -496,7 +489,6 @@
             >
           </label>
 
-
           <label>
             Welcome title
 
@@ -506,7 +498,6 @@
               placeholder="Welcome!"
             >
           </label>
-
 
           <label>
             Welcome message
@@ -518,7 +509,6 @@
             ></textarea>
           </label>
 
-
           <label>
             Address
 
@@ -528,7 +518,6 @@
               placeholder="Your complete property address"
             ></textarea>
           </label>
-
 
           <label>
             Google Maps link
@@ -541,7 +530,6 @@
           </label>
 
         </section>
-
 
         <!-- STAY -->
 
@@ -560,7 +548,6 @@
             >
           </label>
 
-
           <label>
             Check-out
 
@@ -571,7 +558,6 @@
             >
           </label>
 
-
           <label>
             Wi-Fi name
 
@@ -581,7 +567,6 @@
               placeholder="Wi-Fi network name"
             >
           </label>
-
 
           <label>
             Wi-Fi password
@@ -594,7 +579,6 @@
           </label>
 
         </section>
-
 
         <!-- CONTACT -->
 
@@ -613,7 +597,6 @@
             >
           </label>
 
-
           <label>
             Host phone
 
@@ -626,8 +609,35 @@
 
         </section>
 
-      </div>
+        <!-- PHOTOS -->
 
+        <section
+          class="editor-section"
+          data-section="photos"
+        >
+
+          <label>
+            Upload property photos
+
+            <input
+              id="e-photo-upload"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+            >
+          </label>
+
+          <p>
+            JPG, PNG, or WEBP. Maximum 5 MB per photo, up to 20 photos.
+          </p>
+
+          <div id="editor-photo-list">
+            No photos uploaded yet.
+          </div>
+
+        </section>
+
+      </div>
 
       <div class="editor-actions">
 
@@ -661,10 +671,11 @@
     document.body.appendChild(panel);
 
     /* -----------------------------------------
-       Fill fields
+       Fill fields and show existing photos
     ----------------------------------------- */
 
     updateEditorFields(guide);
+    renderEditorPhotos();
 
     /* -----------------------------------------
        Tabs
@@ -678,8 +689,7 @@
               'click',
               function () {
 
-                const tab =
-                    button.dataset.tab;
+                const tab = button.dataset.tab;
 
                 panel
                     .querySelectorAll('.editor-tab')
@@ -695,12 +705,9 @@
 
                 button.classList.add('active');
 
-                const section =
-                    panel.querySelector(
-                        '[data-section="' +
-                        tab +
-                        '"]'
-                    );
+                const section = panel.querySelector(
+                    '[data-section="' + tab + '"]'
+                );
 
                 if (section) {
                   section.classList.add('active');
@@ -784,6 +791,17 @@
         );
 
     /* -----------------------------------------
+       Photo upload
+    ----------------------------------------- */
+
+    document
+        .getElementById('e-photo-upload')
+        .addEventListener(
+            'change',
+            uploadGuidePhotos
+        );
+
+    /* -----------------------------------------
        Keyboard shortcut
        Ctrl + S
     ----------------------------------------- */
@@ -795,9 +813,7 @@
           if (
               event.ctrlKey &&
               event.key.toLowerCase() === 's' &&
-              document.getElementById(
-                  'editor-panel'
-              )
+              document.getElementById('editor-panel')
           ) {
 
             event.preventDefault();
@@ -810,15 +826,211 @@
   }
 
   /* =========================================================
+     RENDER UPLOADED PHOTOS
+  ========================================================= */
+
+  function renderEditorPhotos() {
+    const container = document.getElementById(
+        'editor-photo-list'
+    );
+
+    if (!container) return;
+
+    const photos = Array.isArray(guide?.image_urls)
+        ? guide.image_urls
+        : [];
+
+    container.replaceChildren();
+
+    if (photos.length === 0) {
+      container.textContent = 'No photos uploaded yet.';
+      return;
+    }
+
+    const gallery = document.createElement('div');
+
+    gallery.style.display = 'grid';
+    gallery.style.gridTemplateColumns =
+        'repeat(2, minmax(0, 1fr))';
+    gallery.style.gap = '10px';
+
+    photos.forEach(function (url, index) {
+      const image = document.createElement('img');
+
+      image.src = url;
+      image.alt = 'Property photo ' + (index + 1);
+      image.loading = 'lazy';
+
+      image.style.width = '100%';
+      image.style.height = '120px';
+      image.style.objectFit = 'cover';
+      image.style.borderRadius = '10px';
+
+      gallery.appendChild(image);
+    });
+
+    container.appendChild(gallery);
+  }
+
+  /* =========================================================
+     UPLOAD PROPERTY PHOTOS
+  ========================================================= */
+
+  async function uploadGuidePhotos(event) {
+    const input = event.target;
+    const files = Array.from(input.files || []);
+
+    if (!files.length) return;
+
+    if (!editorToken || !publicId) {
+      setStatus(
+          'Editor information is missing.',
+          false
+      );
+      input.value = '';
+      return;
+    }
+
+    const existingPhotos = Array.isArray(guide?.image_urls)
+        ? guide.image_urls
+        : [];
+
+    const remaining = 20 - existingPhotos.length;
+
+    if (remaining <= 0) {
+      setStatus(
+          'Maximum of 20 photos reached.',
+          false
+      );
+      input.value = '';
+      return;
+    }
+
+    if (files.length > remaining) {
+      setStatus(
+          'You can only upload ' + remaining +
+          ' more photo(s). Maximum is 20.',
+          false
+      );
+      input.value = '';
+      return;
+    }
+
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp'
+    ];
+
+    for (const file of files) {
+      if (!allowedTypes.includes(file.type)) {
+        setStatus(
+            'Only JPG, PNG, and WEBP photos are allowed.',
+            false
+        );
+        input.value = '';
+        return;
+      }
+
+      if (
+          file.size > 5 * 1024 * 1024 ||
+          file.size === 0
+      ) {
+        setStatus(
+            'Each photo must be between 1 byte and 5 MB.',
+            false
+        );
+        input.value = '';
+        return;
+      }
+    }
+
+    input.disabled = true;
+
+    const baseUrl = window.SUPABASE_URL.replace(/\/+$/, '');
+
+    let uploadedCount = 0;
+
+    try {
+      for (const file of files) {
+        setStatus(
+            'Uploading photo ' +
+            (uploadedCount + 1) +
+            ' of ' + files.length + '…'
+        );
+
+        const formData = new FormData();
+
+        formData.append('edit_token', editorToken);
+        formData.append('file', file);
+
+        const response = await fetch(
+            baseUrl + '/functions/v1/upload-guide-photo',
+            {
+              method: 'POST',
+              headers: {
+                apikey: window.SUPABASE_ANON_KEY
+              },
+              body: formData
+            }
+        );
+
+        let result;
+
+        try {
+          result = await response.json();
+        } catch (error) {
+          throw new Error(
+              'Invalid response from photo upload server.'
+          );
+        }
+
+        if (!response.ok || !result.success) {
+          throw new Error(
+              result.error || 'Photo upload failed.'
+          );
+        }
+
+        if (result.photo_url) {
+          if (!Array.isArray(guide.image_urls)) {
+            guide.image_urls = [];
+          }
+
+          guide.image_urls.push(result.photo_url);
+
+          uploadedCount++;
+
+          renderEditorPhotos();
+        }
+      }
+
+      setStatus(
+          uploadedCount +
+          (uploadedCount === 1
+              ? ' photo uploaded successfully ✓'
+              : ' photos uploaded successfully ✓')
+      );
+
+    } catch (error) {
+      setStatus(
+          'Upload error: ' + error.message,
+          false
+      );
+
+    } finally {
+      input.disabled = false;
+      input.value = '';
+    }
+  }
+
+  /* =========================================================
      STATUS MESSAGE
   ========================================================= */
 
   function setStatus(message, good = true) {
-
-    const element =
-        document.getElementById(
-            'editor-status'
-        );
+    const element = document.getElementById(
+        'editor-status'
+    );
 
     if (!element) return;
 
@@ -828,7 +1040,6 @@
         'error',
         !good
     );
-
   }
 
   /* =========================================================
@@ -836,7 +1047,6 @@
   ========================================================= */
 
   function collectChanges() {
-
     const fields = [
       'property_name',
       'welcome_title',
@@ -854,25 +1064,20 @@
     const values = {};
 
     fields.forEach(function (key) {
-
-      const input =
-          document.getElementById(
-              'e-' + key
-          );
+      const input = document.getElementById(
+          'e-' + key
+      );
 
       if (!input) {
         values[key] = null;
         return;
       }
 
-      const value =
-          input.value.trim();
+      const value = input.value.trim();
 
-      values[key] =
-          value === ''
-              ? null
-              : value;
-
+      values[key] = value === ''
+          ? null
+          : value;
     });
 
     return values;
@@ -883,7 +1088,6 @@
   ========================================================= */
 
   async function saveGuide() {
-
     if (!editorToken) {
       setStatus(
           'Editor token is missing.',
@@ -892,52 +1096,42 @@
       return;
     }
 
-    const button =
-        document.getElementById(
-            'save-guide'
-        );
+    const button = document.getElementById(
+        'save-guide'
+    );
 
     if (!button) return;
 
-    const values =
-        collectChanges();
+    const values = collectChanges();
 
     button.disabled = true;
     button.textContent = 'Saving…';
 
-    setStatus(
-        'Saving changes…'
-    );
+    setStatus('Saving changes…');
 
     try {
-
-      const result =
-          await client.rpc(
-              'update_guide_by_token',
-              {
-                p_edit_token: editorToken,
-                p_changes: values
-              }
-          );
+      const result = await client.rpc(
+          'update_guide_by_token',
+          {
+            p_edit_token: editorToken,
+            p_changes: values
+          }
+      );
 
       const data = result.data;
       const error = result.error;
 
       if (error) {
-
         setStatus(
-            'Could not save: ' +
-            error.message,
+            'Could not save: ' + error.message,
             false
         );
-
         return;
       }
 
-      guide =
-          Array.isArray(data)
-              ? data[0]
-              : data;
+      guide = Array.isArray(data)
+          ? data[0]
+          : data;
 
       if (guide) {
         applyGuide(guide);
@@ -945,24 +1139,17 @@
         applyGuide(values);
       }
 
-      setStatus(
-          'Saved successfully ✓'
-      );
+      setStatus('Saved successfully ✓');
 
     } catch (error) {
-
       setStatus(
-          'Could not save: ' +
-          error.message,
+          'Could not save: ' + error.message,
           false
       );
 
     } finally {
-
       button.disabled = false;
-      button.textContent =
-          'Save Changes';
-
+      button.textContent = 'Save Changes';
     }
   }
 
@@ -971,69 +1158,46 @@
   ========================================================= */
 
   async function copyGuestLink() {
-
     if (!publicId) {
-
       setStatus(
           'Guest guide ID is missing.',
           false
       );
-
       return;
     }
 
-    const url =
-        new URL(
-            '/g/' +
-            encodeURIComponent(publicId),
-            location.origin
-        ).href;
+    const url = new URL(
+        '/g/' + encodeURIComponent(publicId),
+        location.origin
+    ).href;
 
     try {
+      await navigator.clipboard.writeText(url);
 
-      await navigator.clipboard.writeText(
-          url
-      );
-
-      setStatus(
-          'Guest link copied ✓'
-      );
+      setStatus('Guest link copied ✓');
 
     } catch (error) {
-
-      // Fallback for browsers that block clipboard
       try {
-
-        const temporary =
-            document.createElement('input');
+        const temporary = document.createElement('input');
 
         temporary.value = url;
 
-        document.body.appendChild(
-            temporary
-        );
+        document.body.appendChild(temporary);
 
         temporary.select();
 
-        document.execCommand(
-            'copy'
-        );
+        document.execCommand('copy');
 
         temporary.remove();
 
-        setStatus(
-            'Guest link copied ✓'
-        );
+        setStatus('Guest link copied ✓');
 
       } catch (fallbackError) {
-
         setStatus(
             'Could not copy the link. Please copy it manually.',
             false
         );
-
       }
-
     }
   }
 
@@ -1042,9 +1206,7 @@
   ========================================================= */
 
   async function init() {
-
-    const currentRoute =
-        route();
+    const currentRoute = route();
 
     /* -----------------------------------------
        Check Supabase library
@@ -1052,14 +1214,11 @@
 
     if (
         !window.supabase ||
-        typeof window.supabase.createClient !==
-        'function'
+        typeof window.supabase.createClient !== 'function'
     ) {
-
       showSetupError(
           'Supabase JavaScript library is not loaded. Make sure the Supabase CDN script is included before editor.js.'
       );
-
       return;
     }
 
@@ -1068,18 +1227,11 @@
     ----------------------------------------- */
 
     if (!configReady()) {
-
-      if (
-          currentRoute.mode ===
-          'edit'
-      ) {
-
+      if (currentRoute.mode === 'edit') {
         showSetupError(
             'Open supabase-config.js and add your Supabase Project URL and anon key.'
         );
-
       }
-
       return;
     }
 
@@ -1087,57 +1239,38 @@
        Create Supabase client
     ----------------------------------------- */
 
-    client =
-        window.supabase.createClient(
-            window.SUPABASE_URL,
-            window.SUPABASE_ANON_KEY
-        );
+    client = window.supabase.createClient(
+        window.SUPABASE_URL,
+        window.SUPABASE_ANON_KEY
+    );
 
     /* -----------------------------------------
        Load appropriate page
     ----------------------------------------- */
 
-    if (
-        currentRoute.mode ===
-        'edit'
-    ) {
-
-      await loadEditor(
-          currentRoute.value
-      );
+    if (currentRoute.mode === 'edit') {
+      await loadEditor(currentRoute.value);
 
     } else if (
-        currentRoute.mode ===
-        'guest' &&
+        currentRoute.mode === 'guest' &&
         currentRoute.value
     ) {
-
-      await loadGuest(
-          currentRoute.value
-      );
-
+      await loadGuest(currentRoute.value);
     }
-
   }
 
   /* =========================================================
      START
   ========================================================= */
 
-  if (
-      document.readyState ===
-      'loading'
-  ) {
-
+  if (document.readyState === 'loading') {
     document.addEventListener(
         'DOMContentLoaded',
         init
     );
 
   } else {
-
     init();
-
   }
 
 })();
