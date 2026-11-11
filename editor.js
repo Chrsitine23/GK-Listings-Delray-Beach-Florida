@@ -185,18 +185,20 @@
     const buttonInput = document.getElementById('e-ack-button-text');
 
     const agreementInputs = Array.from(
-        document.querySelectorAll('.e-ack-agreement')
+        document.querySelectorAll('#e-ack-agreements .e-ack-agreement')
     );
+
+    const agreements = agreementInputs.length > 0
+        ? agreementInputs.map(function (input) {
+          return input.value.trim();
+        }).filter(Boolean)
+        : previous.agreements;
 
     return {
       enabled: enabledInput ? enabledInput.checked : previous.enabled,
       title: titleInput ? titleInput.value.trim() : previous.title,
       introduction: introInput ? introInput.value.trim() : previous.introduction,
-      agreements: agreementInputs
-          .map(function (input) {
-            return input.value.trim();
-          })
-          .filter(Boolean),
+      agreements: agreements,
       checkbox_text: checkboxInput
           ? checkboxInput.value.trim()
           : previous.checkbox_text,
@@ -205,6 +207,7 @@
           : previous.button_text
     };
   }
+
 
   /* Render the editable agreement statements. */
 
