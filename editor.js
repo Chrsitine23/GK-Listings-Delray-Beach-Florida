@@ -959,55 +959,45 @@
       
       
       <!-- ACKNOWLEDGMENT -->
-      
-      <section
-        class="editor-section"
-        data-section="acknowledgment"
-      >
+     
+      <section class="editor-section" data-section="acknowledgment">
         <h3>Acknowledgment of Risks</h3>
       
         <p>
-          Customize the acknowledgment modal guests see before entering the guide.
-          One required checkbox will cover all agreement statements.
+          Customize the acknowledgment modal guests see before entering
+          the guide. One required checkbox will cover all agreement statements.
         </p>
       
-        <label style="display:flex;align-items:center;gap:10px;">
-          <input
-            id="e-ack-enabled"
-            type="checkbox"
-            style="width:auto;"
-          >
-          Enable acknowledgment modal
-        </label>
+        <div class="ack-editor-setting">
+          <label class="ack-toggle">
+            <input id="e-ack-enabled" type="checkbox">
+            <span>Enable acknowledgment modal</span>
+          </label>
+        </div>
       
-        <label>
-          Modal title
-      
+        <div class="ack-editor-setting">
+          <label for="e-ack-title">Modal title</label>
           <input
             id="e-ack-title"
             type="text"
             maxlength="100"
             placeholder="Acknowledgment of Risks"
           >
-        </label>
+        </div>
       
-        <label>
-          Introduction
-      
+        <div class="ack-editor-setting">
+          <label for="e-ack-introduction">Introduction</label>
           <textarea
             id="e-ack-introduction"
             rows="3"
             maxlength="500"
             placeholder="By continuing, you acknowledge and agree to the following:"
           ></textarea>
-        </label>
+        </div>
       
-        <div style="margin-top:18px;">
+        <div class="ack-editor-setting">
           <strong>Agreement statements</strong>
-      
-          <p>
-            Add, edit, delete, or rearrange the statements guests must review.
-          </p>
+          <p>Add, edit, delete, or rearrange the statements guests must review.</p>
       
           <div id="e-ack-agreements"></div>
       
@@ -1015,48 +1005,45 @@
             id="e-ack-add-agreement"
             type="button"
             class="secondary-action"
-            style="display:block !important; visibility:visible !important; opacity:1 !important; margin-top:15px;"
           >
             + Add Agreement
           </button>
         </div>
       
-        <label style="margin-top:20px;">
-          Required checkbox wording
-      
+        <div class="ack-editor-setting">
+          <label for="e-ack-checkbox-text">Required checkbox wording</label>
           <textarea
             id="e-ack-checkbox-text"
             rows="3"
             maxlength="300"
             placeholder="I have read, understood, and agree to all the statements above."
           ></textarea>
-        </label>
+        </div>
       
-        <label>
-          Continue button text
-      
+        <div class="ack-editor-setting">
+          <label for="e-ack-button-text">Continue button text</label>
           <input
             id="e-ack-button-text"
             type="text"
             maxlength="50"
             placeholder="I Agree & Continue"
           >
-        </label>
+        </div>
       
-        <button
-          id="e-ack-preview"
-          type="button"
-          class="secondary-action"
-          style="margin-top:12px;"
-        >
-          Preview Acknowledgment
-        </button>
+        <div class="ack-editor-setting">
+          <button
+            id="e-ack-preview"
+            type="button"
+            class="secondary-action"
+          >
+            Preview Acknowledgment
+          </button>
+        </div>
       
-        <p>
+        <p class="ack-editor-note">
           Remember to click Save Changes to store your acknowledgment settings.
         </p>
       </section>
-
 
       <div class="editor-actions">
 
