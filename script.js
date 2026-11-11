@@ -44,7 +44,7 @@ function copyText(elementId) {
   if (!el) return;
 
   const text = el.textContent.trim();
-  
+
   navigator.clipboard.writeText(text).then(() => {
     // Visual feedback
     const btn = el.parentElement.querySelector('.copy-btn');

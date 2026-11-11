@@ -1201,6 +1201,187 @@
     }
   }
 
+  
+/* =========================================
+   QUICK TOUR LIGHTBOX
+========================================= */
+
+let tourPhotos = [];
+let currentTourPhoto = 0;
+
+
+/* OPEN LIGHTBOX */
+
+function openTourLightbox(index) {
+
+    tourPhotos = Array.from(
+        document.querySelectorAll(
+            ".tour-masonry .tour-photo img"
+        )
+    );
+
+    currentTourPhoto = tourPhotos.indexOf(
+        tourPhotos[index]
+    );
+
+    if (currentTourPhoto === -1) {
+        return;
+    }
+
+    updateTourLightbox();
+
+    const lightbox = document.getElementById(
+        "tour-lightbox"
+    );
+
+    lightbox.classList.add("active");
+
+    lightbox.setAttribute("aria-hidden", "false");
+
+    document.body.style.overflow = "hidden";
+}
+
+
+/* UPDATE IMAGE */
+
+function updateTourLightbox() {
+
+    const image = document.getElementById(
+        "lightbox-image"
+    );
+
+    const current = document.getElementById(
+        "lightbox-current"
+    );
+
+    const total = document.getElementById(
+        "lightbox-total"
+    );
+
+    const selectedPhoto = tourPhotos[
+        currentTourPhoto
+    ];
+
+    image.src = selectedPhoto.src;
+
+    image.alt = selectedPhoto.alt;
+
+    current.textContent = currentTourPhoto + 1;
+
+    total.textContent = tourPhotos.length;
+
+}
+
+
+/* NEXT / PREVIOUS PHOTO */
+
+function changeTourPhoto(direction) {
+
+    if (tourPhotos.length === 0) {
+        return;
+    }
+
+    currentTourPhoto += direction;
+
+    /* LOOP THROUGH PHOTOS */
+
+    if (currentTourPhoto >= tourPhotos.length) {
+        currentTourPhoto = 0;
+    }
+
+    if (currentTourPhoto < 0) {
+        currentTourPhoto = tourPhotos.length - 1;
+    }
+
+    updateTourLightbox();
+
+}
+
+
+/* CLOSE LIGHTBOX */
+
+function closeTourLightbox() {
+
+    const lightbox = document.getElementById(
+        "tour-lightbox"
+    );
+
+    lightbox.classList.remove("active");
+
+    lightbox.setAttribute("aria-hidden", "true");
+
+    document.body.style.overflow = "";
+
+}
+
+
+/* CLICK PHOTO TO OPEN */
+
+document.addEventListener("click", function(event) {
+
+    const clickedImage = event.target.closest(
+        ".tour-masonry .tour-photo img"
+    );
+
+    if (!clickedImage) {
+        return;
+    }
+
+    tourPhotos = Array.from(
+        document.querySelectorAll(
+            ".tour-masonry .tour-photo img"
+        )
+    );
+
+    const photoIndex = tourPhotos.indexOf(
+        clickedImage
+    );
+
+    openTourLightbox(photoIndex);
+
+});
+
+
+/* CLICK OUTSIDE IMAGE TO CLOSE */
+
+document.getElementById(
+    "tour-lightbox"
+).addEventListener("click", function(event) {
+
+    if (event.target === this) {
+        closeTourLightbox();
+    }
+
+});
+
+
+/* KEYBOARD CONTROLS */
+
+document.addEventListener("keydown", function(event) {
+
+    const lightbox = document.getElementById(
+        "tour-lightbox"
+    );
+
+    if (!lightbox.classList.contains("active")) {
+        return;
+    }
+
+    if (event.key === "Escape") {
+        closeTourLightbox();
+    }
+
+    if (event.key === "ArrowRight") {
+        changeTourPhoto(1);
+    }
+
+    if (event.key === "ArrowLeft") {
+        changeTourPhoto(-1);
+    }
+
+});
+
+
   /* =========================================================
      INITIALIZE
   ========================================================= */

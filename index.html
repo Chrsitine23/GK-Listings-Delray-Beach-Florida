@@ -103,135 +103,443 @@
 
     <!-- ==================== CONTENT PAGES ==================== -->
 
-    <!-- WELCOME -->
-    <section id="welcome" class="page content-page">
+    
+<!-- WELCOME -->
+<section id="welcome" class="page content-page">
 
-        <div class="content-header">
-            <button class="back-btn" onclick="showPage('menu')">
-                <i data-lucide="arrow-left"></i>
-            </button>
-            <h2>Welcome</h2>
-        </div>
+    <div class="content-header">
+        <button class="back-btn" onclick="showPage('menu')">
+            <i data-lucide="arrow-left"></i>
+        </button>
+        <h2>Welcome</h2>
+    </div>
 
-        <div class="content-body">
+    <div class="content-body">
 
-            <div class="content-card welcome-card">
+        <div class="content-card welcome-card">
 
-                <!-- WELCOME INTRO -->
-                <div class="welcome-intro">
-                    <h3 id="welcome-title">Welcome to GK Listings! 👋</h3>
-                </div>
+            <!-- WELCOME INTRO -->
+            <div class="welcome-intro">
+                <h3 id="welcome-title">Welcome to GK Listings! 👋</h3>
+            </div>
 
+            <!-- LOCATION -->
+            <div class="welcome-location">
+                <i data-lucide="map-pin"></i>
 
-                <!-- LOCATION (kept as the main focus card) -->
-                <div class="welcome-location">
-                    <i data-lucide="map-pin"></i>
-                    <div>
-                        <span class="welcome-label">YOUR LOCATION</span>
-                        <strong id="welcome-property">2470 Douglas Avenue, Delray Beach, FL 33444</strong>
-                        <p id="welcome-room">3 Bedrooms · 5 Beds · 2 Bathrooms</p>
-                        <small id="welcome-address">Delray Beach, Florida</small>
-                    </div>
-                </div>
+                <div>
+                    <span class="welcome-label">YOUR LOCATION</span>
 
+                    <strong id="welcome-property">
+                        2470 Douglas Avenue, Delray Beach, FL 33444
+                    </strong>
 
-                <!-- YOUR STAY -->
-                <div class="welcome-section">
-                    <div class="section-title">
-                        <i data-lucide="home"></i>
-                        <span>Your Stay</span>
-                    </div>
-
-                    <div class="stay-grid">
-                        <div class="stay-item">
-                            <i data-lucide="door-open"></i>
-                            <div>
-                                <small>BEDROOMS</small>
-                                <strong id="stay-bedrooms">3 Bedroom</strong>
-                            </div>
-                        </div>
-
-                        <div class="stay-item">
-                            <i data-lucide="bed-double"></i>
-                            <div>
-                                <small>BEDS</small>
-                                <strong id="stay-beds">5 Beds</strong>
-                            </div>
-                        </div>
-
-                        <div class="stay-item">
-                            <i data-lucide="bath"></i>
-                            <div>
-                                <small>BATHROOMS</small>
-                                <strong id="stay-bathrooms">2 Bathroom</strong>
-                            </div>
-                        </div>
-
-                        <div class="stay-item">
-                            <i data-lucide="maximize-2"></i>
-                            <div>
-                                <small>SIZE</small>
-                                <strong id="stay-size">151m²</strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- GUEST GUIDE -->
-                <div class="welcome-guide">
-                    <div class="section-title">
-                        <i data-lucide="book-open"></i>
-                        <span>Guest Guide</span>
-                    </div>
-
-                    <p id="guide-message">
-                        Everything you need for your stay is available in this guide.
+                    <p id="welcome-room">
+                        3 Bedrooms · 5 Beds · 2 Bathrooms
                     </p>
 
-                    <div class="guide-items">
+                    <small id="welcome-address">
+                        Delray Beach, Florida
+                    </small>
+                </div>
+            </div>
+
+            <!-- YOUR STAY -->
+            <div class="welcome-section">
+
+                <div class="section-title">
+                    <i data-lucide="home"></i>
+                    <span>Your Stay</span>
+                </div>
+
+                <div class="stay-grid">
+
+                    <div class="stay-item">
+                        <i data-lucide="door-open"></i>
+
+                        <div>
+                            <small>BEDROOMS</small>
+                            <strong id="stay-bedrooms">3 Bedroom</strong>
+                        </div>
+                    </div>
+
+                    <div class="stay-item">
+                        <i data-lucide="bed-double"></i>
+
+                        <div>
+                            <small>BEDS</small>
+                            <strong id="stay-beds">5 Beds</strong>
+                        </div>
+                    </div>
+
+                    <div class="stay-item">
+                        <i data-lucide="bath"></i>
+
+                        <div>
+                            <small>BATHROOMS</small>
+                            <strong id="stay-bathrooms">2 Bathroom</strong>
+                        </div>
+                    </div>
+
+                    <div class="stay-item">
+                        <i data-lucide="maximize-2"></i>
+
+                        <div>
+                            <small>SIZE</small>
+                            <strong id="stay-size">151m²</strong>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- GUEST GUIDE -->
+            <div class="welcome-guide">
+
+                <div class="section-title">
+                    <i data-lucide="book-open"></i>
+                    <span>Guest Guide</span>
+                </div>
+
+                <p id="guide-message">
+                    Everything you need for your stay is available in this guide.
+                </p>
+
+                <div class="guide-items">
+
                     <span>
                         <i data-lucide="wifi"></i>
                         WiFi
                     </span>
-                        <span>
+
+                    <span>
                         <i data-lucide="waves"></i>
                         Pool
                     </span>
-                        <span>
+
+                    <span>
                         <i data-lucide="map"></i>
                         Location
                     </span>
-                        <span>
+
+                    <span>
                         <i data-lucide="play-circle"></i>
                         Tutorials
                     </span>
-                        <span>
+
+                    <span>
                         <i data-lucide="clipboard-list"></i>
                         House Rules
                     </span>
-                        <span>
+
+                    <span>
                         <i data-lucide="log-out"></i>
                         Check-Out
                     </span>
+
+                </div>
+            </div>
+
+
+                    
+        <!-- =====================================
+            QUICK TOUR - AIRBNB PHOTO GALLERY
+        ====================================== -->
+
+        <div class="welcome-tour">
+
+            <!-- TOUR INTRO -->
+            <div class="tour-main-header">
+                <span class="tour-eyebrow">EXPLORE YOUR STAY</span>
+
+                <h3>Take a Quick Tour</h3>
+
+                <p>
+                    Take a look around and discover everything
+                    your home away from home has to offer.
+                </p>
+            </div>
+
+
+            <!-- =====================================
+                LIVING ROOM
+            ====================================== -->
+
+            <div class="tour-section">
+
+                <div class="tour-section-header">
+                    <div>
+                        <span class="tour-section-number">01</span>
+                        <h4>Living Room</h4>
                     </div>
+
+                    <span class="tour-photo-count">3 Photos</span>
                 </div>
 
+                <div class="tour-masonry living-gallery">
 
-                <!-- CONTACT / HELP -->
-                <div class="welcome-contact">
-                    <i data-lucide="message-circle"></i>
-                    <div>
-                        <strong>Need help?</strong>
-                        <p>Contact us anytime during your stay.</p>
+                    <div class="tour-photo">
+                        <img src="images/livingroom.png"
+                            alt="Living Room"
+                            loading="lazy">
                     </div>
+
+                    <div class="tour-photo">
+                        <img src="images/livingroom1.png"
+                            alt="Living Room View"
+                            loading="lazy">
+                    </div>
+
+                    <div class="tour-photo">
+                        <img src="images/livingroom2.png"
+                            alt="Living Room Interior"
+                            loading="lazy">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================
+                BEDROOM
+            ====================================== -->
+
+            <div class="tour-section">
+
+                <div class="tour-section-header">
+                    <div>
+                        <span class="tour-section-number">02</span>
+                        <h4>Bedroom</h4>
+                    </div>
+
+                    <span class="tour-photo-count">3 Photos</span>
+                </div>
+
+                <div class="tour-masonry bedroom-gallery">
+
+                    <div class="tour-photo">
+                        <img src="images/bedroom1.png"
+                            alt="Bedroom"
+                            loading="lazy">
+                    </div>
+
+                    <div class="tour-photo">
+                        <img src="images/bedroom2.png"
+                            alt="Bedroom View"
+                            loading="lazy">
+                    </div>
+
+                    <div class="tour-photo">
+                        <img src="images/bedroom3.png"
+                            alt="Bedroom Interior"
+                            loading="lazy">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================
+                BATHROOM
+            ====================================== -->
+
+            <div class="tour-section">
+
+                <div class="tour-section-header">
+                    <div>
+                        <span class="tour-section-number">03</span>
+                        <h4>Bathroom</h4>
+                    </div>
+
+                    <span class="tour-photo-count">3 Photos</span>
+                </div>
+
+                <div class="tour-masonry bathroom-gallery">
+
+                    <div class="tour-photo">
+                        <img src="images/bathroom.png"
+                            alt="Bathroom"
+                            loading="lazy">
+                    </div>
+
+                    <div class="tour-photo">
+                        <img src="images/bathroom1.png"
+                            alt="Bathroom View"
+                            loading="lazy">
+                    </div>
+
+                    <div class="tour-photo">
+                        <img src="images/bathroom2.png"
+                            alt="Bathroom Interior"
+                            loading="lazy">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================
+                POOL
+            ====================================== -->
+
+            <div class="tour-section">
+
+                <div class="tour-section-header">
+                    <div>
+                        <span class="tour-section-number">04</span>
+                        <h4>Pool & Amenities</h4>
+                    </div>
+
+                    <span class="tour-photo-count">8 Photos</span>
+                </div>
+
+                <div class="tour-masonry pool-gallery">
+
+                    <div class="tour-photo">
+                        <img src="images/pool.png"
+                            alt="Swimming Pool"
+                            loading="lazy">
+                    </div>
+
+                    <div class="tour-photo">
+                        <img src="images/pool1.png"
+                            alt="Swimming Pool View"
+                            loading="lazy">
+                    </div>
+
+                    <div class="tour-photo">
+                        <img src="images/pool2.png"
+                            alt="Pool Area"
+                            loading="lazy">
+                    </div>
+
+                    <div class="tour-photo">
+                        <img src="images/pool3.png"
+                            alt="Pool Lounge"
+                            loading="lazy">
+                    </div>
+
+                    <div class="tour-photo">
+                        <img src="images/pool4.png"
+                            alt="Pool View"
+                            loading="lazy">
+                    </div>
+
+                    <div class="tour-photo">
+                        <img src="images/pool5.png"
+                            alt="Swimming Pool Area"
+                            loading="lazy">
+                    </div>
+
+                    <div class="tour-photo">
+                        <img src="images/pool6.png"
+                            alt="Pool Amenities"
+                            loading="lazy">
+                    </div>
+
+                    <div class="tour-photo">
+                        <img src="images/pool7.png"
+                            alt="Pool Facilities"
+                            loading="lazy">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- TOUR FOOTER -->
+            <div class="tour-footer">
+                <i data-lucide="sparkles"></i>
+
+                <span>
+                    Your perfect getaway starts here.
+                </span>
+            </div>
+
+        </div>
+
+                
+        <!-- =====================================
+            PHOTO LIGHTBOX
+        ====================================== -->
+
+        <div id="tour-lightbox" class="tour-lightbox" aria-hidden="true">
+
+            <!-- CLOSE BUTTON -->
+            <button
+                class="lightbox-close"
+                onclick="closeTourLightbox()"
+                aria-label="Close photo"
+            >
+                &times;
+            </button>
+
+            <!-- PREVIOUS PHOTO -->
+            <button
+                class="lightbox-arrow lightbox-prev"
+                onclick="changeTourPhoto(-1)"
+                aria-label="Previous photo"
+            >
+                &#10094;
+            </button>
+
+            <!-- FULL IMAGE -->
+            <div class="lightbox-content">
+
+                <img
+                    id="lightbox-image"
+                    src=""
+                    alt="Property photo"
+                >
+
+                <!-- PHOTO COUNTER -->
+                <div class="lightbox-counter">
+                    <span id="lightbox-current">1</span>
+                    /
+                    <span id="lightbox-total">1</span>
+                </div>
+
+            </div>
+
+            <!-- NEXT PHOTO -->
+            <button
+                class="lightbox-arrow lightbox-next"
+                onclick="changeTourPhoto(1)"
+                aria-label="Next photo"
+            >
+                &#10095;
+            </button>
+
+        </div>
+
+
+
+
+            <!-- CONTACT / HELP -->
+            <div class="welcome-contact">
+
+                <i data-lucide="message-circle"></i>
+
+                <div>
+                    <strong>Need help?</strong>
+
+                    <p>
+                        Contact us anytime during your stay.
+                    </p>
                 </div>
 
             </div>
 
         </div>
 
-    </section>
+    </div>
+
+</section>
+
 
     <!-- ==================== CHECK IN ==================== -->
     <section id="checkin" class="page content-page">
