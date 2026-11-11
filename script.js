@@ -20,16 +20,43 @@ function showPage(pageId) {
   }
 }
 
+
+/* =========================================================
+   ACKNOWLEDGMENT MODAL
+========================================================= */
+
 function openRiskModal() {
+  const settings = window.currentGuideAcknowledgment || {};
   const modal = document.getElementById('risk-modal');
 
-  if (modal) {
-    modal.style.display = 'flex';
+  // If acknowledgment is disabled, go directly to the dashboard.
+  if (settings.enabled === false) {
+    showPage('menu');
+    return;
   }
+
+  if (!modal) {
+    showPage('menu');
+    return;
+  }
+
+  const checkbox = document.getElementById('risk-agreement-checkbox');
+
+  if (checkbox) {
+    checkbox.checked = false;
+  }
+
+  modal.style.display = 'flex';
 }
 
 function acceptRisks() {
   const modal = document.getElementById('risk-modal');
+  const checkbox = document.getElementById('risk-agreement-checkbox');
+
+  if (!checkbox || !checkbox.checked) {
+    alert('Please check the box to confirm that you have read and agree to the statements.');
+    return;
+  }
 
   if (modal) {
     modal.style.display = 'none';
@@ -37,6 +64,7 @@ function acceptRisks() {
 
   showPage('menu');
 }
+
 
 // Copy text helper (for WiFi)
 function copyText(elementId) {

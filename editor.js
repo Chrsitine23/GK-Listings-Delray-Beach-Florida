@@ -2,23 +2,10 @@
 (function () {
   'use strict';
 
-  /* =========================================================
-     ANGELICA AQUA VISTA — CLIENT EDITOR
-     Routes:
-       /edit/YOUR_EDIT_TOKEN
-       /g/YOUR_PUBLIC_ID
-       ?edit=YOUR_EDIT_TOKEN
-       ?guide=YOUR_PUBLIC_ID
-     ========================================================= */
-
   let client = null;
   let guide = null;
   let editorToken = null;
   let publicId = null;
-
-  /* =========================================================
-     SUPABASE CONFIG
-  ========================================================= */
 
   function configReady() {
     return (
@@ -28,11 +15,9 @@
         !window.SUPABASE_ANON_KEY.includes('PASTE_')
     );
   }
-
   /* =========================================================
      ROUTING
   ========================================================= */
-
   function route() {
     const path = location.pathname
         .replace(/^\/+|\/+$/g, '')
@@ -133,6 +118,185 @@
     };
   }
 
+  /* =========================================================
+     ACKNOWLEDGMENT SETTINGS
+  ========================================================= */
+
+  const DEFAULT_ACKNOWLEDGMENTS = [
+    'Guest(s) acknowledge that the use of the pool and gym facilities involves inherent risks, including but not limited to injury or death, and voluntarily assume all such risks.',
+    'Compliance with Rules: Guest(s) agree to abide by all posted rules and regulations for pool and gym use provided by the Host or property management.',
+    'Supervision: If children will be using the facilities, Guest(s) agree to provide adequate supervision and accept full responsibility for their safety.',
+    'Release of Liability: Guest(s) release the Host, property owner, and property management from any liability for injury, illness, or death resulting from the use of the pool and gym facilities.',
+    'Indemnification: Guest(s) agree to indemnify and hold the Host harmless from any claims or expenses arising from their use of the facilities.',
+    'Emergency Procedures: Guest(s) agree to follow all posted emergency procedures and instructions provided by the Host or property management. By booking the property, Guest(s) acknowledge having read and understood this Release and agree to its terms.'
+  ];
+
+  function getAcknowledgmentSettings(g) {
+    const saved = g?.guide_data?.acknowledgment || {};
+
+    return {
+      enabled: saved.enabled !== false,
+      title: saved.title || 'Acknowledgment of Risks',
+      introduction: saved.introduction ||
+          'By continuing, you acknowledge and agree to the following:',
+      agreements: Array.isArray(saved.agreements)
+          ? saved.agreements
+          : [...DEFAULT_ACKNOWLEDGMENTS],
+      checkbox_text: saved.checkbox_text ||
+          'I have read, understood, and agree to all the statements above.',
+      button_text: saved.button_text || 'I Agree & Continue'
+    };
+  }
+
+  function applyAcknowledgmentSettings(g) {
+    if (!g) return;
+
+    const settings = getAcknowledgmentSettings(g);
+
+    window.currentGuideAcknowledgment = settings;
+
+    setText('risk-modal-title', settings.title);
+    setText('risk-modal-intro', settings.introduction);
+    setText('risk-checkbox-label', settings.checkbox_text);
+    setText('risk-continue-button', settings.button_text);
+
+    const list = document.getElementById('risk-agreements-list');
+
+    if (list) {
+      list.replaceChildren();
+
+      settings.agreements.forEach(function (statement) {
+        const item = document.createElement('li');
+        item.textContent = statement;
+        list.appendChild(item);
+      });
+    }
+  }
+
+  /* Read the current acknowledgment editor inputs. */
+
+  function collectAcknowledgmentSettings() {
+    const previous = getAcknowledgmentSettings(guide);
+
+    const enabledInput = document.getElementById('e-ack-enabled');
+    const titleInput = document.getElementById('e-ack-title');
+    const introInput = document.getElementById('e-ack-introduction');
+    const checkboxInput = document.getElementById('e-ack-checkbox-text');
+    const buttonInput = document.getElementById('e-ack-button-text');
+
+    const agreementInputs = Array.from(
+        document.querySelectorAll('.e-ack-agreement')
+    );
+
+    return {
+      enabled: enabledInput ? enabledInput.checked : previous.enabled,
+      title: titleInput ? titleInput.value.trim() : previous.title,
+      introduction: introInput ? introInput.value.trim() : previous.introduction,
+      agreements: agreementInputs
+          .map(function (input) {
+            return input.value.trim();
+          })
+          .filter(Boolean),
+      checkbox_text: checkboxInput
+          ? checkboxInput.value.trim()
+          : previous.checkbox_text,
+      button_text: buttonInput
+          ? buttonInput.value.trim()
+          : previous.button_text
+    };
+  }
+
+  /* Render the editable agreement statements. */
+
+  function renderAcknowledgmentEditor(settingsOverride) {
+    const container = document.getElementById('e-ack-agreements');
+
+    if (!container) return;
+
+    const settings = settingsOverride || collectAcknowledgmentSettings();
+    container.replaceChildren();
+
+    settings.agreements.forEach(function (statement, index) {
+      const row = document.createElement('div');
+
+      row.style.cssText =
+          'border:1px solid #ddd;' +
+          'border-radius:10px;' +
+          'padding:10px;' +
+          'margin-bottom:10px;' +
+          'background:#fff;';
+
+      const heading = document.createElement('div');
+      heading.textContent = 'Agreement ' + (index + 1);
+      heading.style.cssText =
+          'font-size:12px;font-weight:700;margin-bottom:8px;color:#52645b;';
+
+      const textarea = document.createElement('textarea');
+      textarea.className = 'e-ack-agreement';
+      textarea.rows = 4;
+      textarea.value = statement;
+      textarea.maxLength = 2000;
+      textarea.style.width = '100%';
+      textarea.style.boxSizing = 'border-box';
+
+      const controls = document.createElement('div');
+      controls.style.cssText =
+          'display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;';
+
+      [
+        { label: 'Move up', action: 'up', disabled: index === 0 },
+        { label: 'Move down', action: 'down', disabled: index === settings.agreements.length - 1 },
+        { label: 'Delete', action: 'delete', disabled: false }
+      ].forEach(function (control) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = control.label;
+        button.dataset.ackAction = control.action;
+        button.dataset.ackIndex = index;
+        button.disabled = control.disabled;
+        button.style.cssText =
+            'padding:7px 10px;border:1px solid #ddd;border-radius:7px;' +
+            'background:#f7f7f7;cursor:pointer;font-size:12px;';
+        controls.appendChild(button);
+      });
+
+      row.appendChild(heading);
+      row.appendChild(textarea);
+      row.appendChild(controls);
+      container.appendChild(row);
+    });
+  }
+
+  /* Preview the modal using unsaved editor values. */
+
+  function previewAcknowledgment() {
+    const modal = document.getElementById('risk-modal');
+
+    if (!modal) {
+      setStatus('The acknowledgment modal was not found in index.html.', false);
+      return;
+    }
+
+    const previewSettings = collectAcknowledgmentSettings();
+
+    const previewGuide = {
+      ...guide,
+      guide_data: {
+        ...(guide?.guide_data || {}),
+        acknowledgment: previewSettings
+      }
+    };
+
+    applyAcknowledgmentSettings(previewGuide);
+
+    const checkbox = document.getElementById('risk-agreement-checkbox');
+    if (checkbox) checkbox.checked = false;
+
+    modal.style.display = 'flex';
+
+    setStatus('Previewing your acknowledgment. These changes are not saved yet.');
+  }
+
   function applyOpeningSettings(g) {
     if (!g) return;
 
@@ -194,6 +358,7 @@
     );
 
     applyOpeningSettings(g);
+    applyAcknowledgmentSettings(g);
 
     setText(
         'welcome-title',
@@ -273,7 +438,21 @@
     setValue('e-opening_location', opening.location);
     setValue('e-opening_button_text', opening.button_text);
 
+    const acknowledgment = getAcknowledgmentSettings(g);
+
+    const enabledInput = document.getElementById('e-ack-enabled');
+
+    if (enabledInput) {
+      enabledInput.checked = acknowledgment.enabled;
+    }
+
+    setValue('e-ack-title', acknowledgment.title);
+    setValue('e-ack-introduction', acknowledgment.introduction);
+    setValue('e-ack-checkbox-text', acknowledgment.checkbox_text);
+    setValue('e-ack-button-text', acknowledgment.button_text);
+
     renderOpeningCoverPreview();
+    renderAcknowledgmentEditor();
   }
 
   /* =========================================================
@@ -524,6 +703,14 @@
         >
           Photos
         </button>
+        
+        <button
+          class="editor-tab"
+          type="button"
+          data-tab="acknowledgment"
+        >
+          Acknowledgment
+        </button>
 
       </div>
 
@@ -769,6 +956,106 @@
         </section>
 
       </div>
+      
+      
+      <!-- ACKNOWLEDGMENT -->
+      
+      <section
+        class="editor-section"
+        data-section="acknowledgment"
+      >
+        <h3>Acknowledgment of Risks</h3>
+      
+        <p>
+          Customize the acknowledgment modal guests see before entering the guide.
+          One required checkbox will cover all agreement statements.
+        </p>
+      
+        <label style="display:flex;align-items:center;gap:10px;">
+          <input
+            id="e-ack-enabled"
+            type="checkbox"
+            style="width:auto;"
+          >
+          Enable acknowledgment modal
+        </label>
+      
+        <label>
+          Modal title
+      
+          <input
+            id="e-ack-title"
+            type="text"
+            maxlength="100"
+            placeholder="Acknowledgment of Risks"
+          >
+        </label>
+      
+        <label>
+          Introduction
+      
+          <textarea
+            id="e-ack-introduction"
+            rows="3"
+            maxlength="500"
+            placeholder="By continuing, you acknowledge and agree to the following:"
+          ></textarea>
+        </label>
+      
+        <div style="margin-top:18px;">
+          <strong>Agreement statements</strong>
+      
+          <p>
+            Add, edit, delete, or rearrange the statements guests must review.
+          </p>
+      
+          <div id="e-ack-agreements"></div>
+      
+          <button
+            id="e-ack-add-agreement"
+            type="button"
+            class="secondary-action"
+          >
+            + Add Agreement
+          </button>
+        </div>
+      
+        <label style="margin-top:20px;">
+          Required checkbox wording
+      
+          <textarea
+            id="e-ack-checkbox-text"
+            rows="3"
+            maxlength="300"
+            placeholder="I have read, understood, and agree to all the statements above."
+          ></textarea>
+        </label>
+      
+        <label>
+          Continue button text
+      
+          <input
+            id="e-ack-button-text"
+            type="text"
+            maxlength="50"
+            placeholder="I Agree & Continue"
+          >
+        </label>
+      
+        <button
+          id="e-ack-preview"
+          type="button"
+          class="secondary-action"
+          style="margin-top:12px;"
+        >
+          Preview Acknowledgment
+        </button>
+      
+        <p>
+          Remember to click Save Changes to store your acknowledgment settings.
+        </p>
+      </section>
+
 
       <div class="editor-actions">
 
@@ -820,6 +1107,7 @@
     updateEditorFields(guide);
     renderOpeningCoverPreview();
     renderEditorPhotos();
+    renderAcknowledgmentEditor(settings);
     updatePublishControls();
 
     /* -----------------------------------------
@@ -961,6 +1249,80 @@
     document
         .getElementById('e-opening-cover-upload')
         .addEventListener('change', uploadOpeningCover);
+
+
+    /* -----------------------------------------
+       Acknowledgment agreement controls
+    ----------------------------------------- */
+
+    document
+        .getElementById('e-ack-add-agreement')
+        .addEventListener('click', function () {
+          const settings = collectAcknowledgmentSettings();
+
+          settings.agreements.push('New agreement statement.');
+
+          const titleInput = document.getElementById('e-ack-title');
+          const introInput = document.getElementById('e-ack-introduction');
+          const checkboxInput = document.getElementById('e-ack-checkbox-text');
+          const buttonInput = document.getElementById('e-ack-button-text');
+
+          // Keep the current editor values while adding a statement.
+          if (titleInput) titleInput.value = settings.title;
+          if (introInput) introInput.value = settings.introduction;
+          if (checkboxInput) checkboxInput.value = settings.checkbox_text;
+          if (buttonInput) buttonInput.value = settings.button_text;
+
+          renderAcknowledgmentEditor(settings);
+        });
+
+    document
+        .getElementById('e-ack-agreements')
+        .addEventListener('click', function (event) {
+          const button = event.target.closest('[data-ack-action]');
+
+          if (!button) return;
+
+          const settings = collectAcknowledgmentSettings();
+          const index = Number(button.dataset.ackIndex);
+          const action = button.dataset.ackAction;
+
+          if (!Number.isInteger(index) || index < 0 || index >= settings.agreements.length) {
+            return;
+          }
+
+          if (action === 'delete') {
+            settings.agreements.splice(index, 1);
+          }
+
+          if (action === 'up' && index > 0) {
+            const item = settings.agreements.splice(index, 1)[0];
+            settings.agreements.splice(index - 1, 0, item);
+          }
+
+          if (action === 'down' && index < settings.agreements.length - 1) {
+            const item = settings.agreements.splice(index, 1)[0];
+            settings.agreements.splice(index + 1, 0, item);
+          }
+
+          // Preserve other acknowledgment fields.
+          const titleInput = document.getElementById('e-ack-title');
+          const introInput = document.getElementById('e-ack-introduction');
+          const checkboxInput = document.getElementById('e-ack-checkbox-text');
+          const buttonInput = document.getElementById('e-ack-button-text');
+
+          if (titleInput) titleInput.value = settings.title;
+          if (introInput) introInput.value = settings.introduction;
+          if (checkboxInput) checkboxInput.value = settings.checkbox_text;
+          if (buttonInput) buttonInput.value = settings.button_text;
+
+          renderAcknowledgmentEditor(settings);
+        });
+
+    document
+        .getElementById('e-ack-preview')
+        .addEventListener('click', previewAcknowledgment);
+
 
     /* -----------------------------------------
        Keyboard shortcut
@@ -1637,6 +1999,9 @@
 
     const previousOpening = guide?.guide_data?.opening || {};
 
+    const previousAcknowledgment =
+        guide?.guide_data?.acknowledgment || {};
+
     values.guide_data = {
       opening: {
         ...previousOpening,
@@ -1650,6 +2015,11 @@
             : previousOpening.button_text || 'Explore Your Stay',
 
         cover_photo: previousOpening.cover_photo || ''
+      },
+
+      acknowledgment: {
+        ...previousAcknowledgment,
+        ...collectAcknowledgmentSettings()
       }
     };
 

@@ -2021,14 +2021,20 @@
 </div>
 
 <!-- RISK ACKNOWLEDGMENT MODAL -->
+
+<!-- RISK ACKNOWLEDGMENT MODAL -->
 <div id="risk-modal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
-        <h3>Acknowledgment of Risks</h3>
+
+        <h3 id="risk-modal-title">Acknowledgment of Risks</h3>
 
         <div class="modal-body">
-            <p>By continuing, you acknowledge and agree to the following:</p>
 
-            <ol class="styled-list">
+            <p id="risk-modal-intro">
+                By continuing, you acknowledge and agree to the following:
+            </p>
+
+            <ol class="styled-list" id="risk-agreements-list">
                 <li>
                     Guest(s) acknowledge that the use of the pool and gym facilities involves inherent risks, including but not limited to injury or death, and voluntarily assume all such risks.
                 </li>
@@ -2049,18 +2055,34 @@
                 </li>
             </ol>
 
-            <p style="margin-top: 16px;">
-                By clicking <strong>I Agree</strong>, you confirm that you have read, understood, and agree to these terms.
-            </p>
+            <div class="risk-checkbox-row" style="margin-top:20px;display:flex;align-items:flex-start;gap:10px;">
+                <input
+                        type="checkbox"
+                        id="risk-agreement-checkbox"
+                        style="margin-top:4px;flex-shrink:0;"
+                >
+
+                <label for="risk-agreement-checkbox" id="risk-checkbox-label">
+                    I have read, understood, and agree to all the statements above.
+                </label>
+            </div>
+
         </div>
 
         <div class="modal-actions">
-            <button class="btn-primary" onclick="acceptRisks()">
-                I Agree & Continue
+            <button
+                    id="risk-continue-button"
+                    class="btn-primary"
+                    type="button"
+                    onclick="acceptRisks()"
+            >
+                I Agree &amp; Continue
             </button>
         </div>
+
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="script.js"></script>
