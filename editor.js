@@ -762,7 +762,8 @@
             'custom-' + card.dataset.pageId;
       });
 
-      const previousPageContent = card.pageContent || {};
+      const previousPageContent =
+          pageSection?._pageContent || card.pageContent || {};
 
       const pageContent = {
         ...previousPageContent,
@@ -974,6 +975,19 @@
 
       const pageContent = item.page_content || {};
 
+      if (!Array.isArray(pageContent.photos)) {
+        pageContent.photos = [];
+      }
+
+      renderCustomPagePhotos(section, pageContent);
+
+      section._pageContent = pageContent;
+      const photoInput = section.querySelector('[data-page-photo-upload]');
+
+      photoInput.addEventListener('change', function (event) {
+        uploadCustomPagePhotos(event, section);
+      });
+
       section.innerHTML = `
   <h3>Custom Information Page</h3>
 
@@ -994,7 +1008,62 @@
       placeholder="Add helpful information for your guests..."
     ></textarea>
   </label>
+  
+  <div class="custom-page-photos">
+
+  <label>
+    Upload Page Photos
+    <input
+      type="file"
+      data-page-photo-upload
+      accept="image/jpeg,image/png,image/webp"
+      multiple
+    >
+  </label>
+
+  <p>JPG, PNG, or WEBP. Maximum 5 MB per photo.</p>
+
+  <div data-page-photo-list>
+    No photos uploaded yet.
+  </div>
+
+</div>
 `;
+
+      function renderCustomPagePhotos(section, pageContent) {
+        const photoList = section.querySelector('[data-page-photo-list]');
+
+        if (!photoList) return;
+
+        const photos = Array.isArray(pageContent.photos)
+            ? pageContent.photos
+            : [];
+
+        photoList.innerHTML = '';
+
+        if (!photos.length) {
+          photoList.textContent = 'No photos uploaded yet.';
+          return;
+        }
+
+        photos.forEach(function (url, index) {
+          const item = document.createElement('div');
+
+          item.className = 'custom-page-photo-item';
+
+          const img = document.createElement('img');
+          img.src = url;
+          img.alt = 'Custom page photo ' + (index + 1);
+
+          img.style.width = '120px';
+          img.style.height = '100px';
+          img.style.objectFit = 'cover';
+          img.style.borderRadius = '8px';
+
+          item.appendChild(img);
+          photoList.appendChild(item);
+        });
+      }
 
       section.querySelector('[data-page-field="title"]').value =
           pageContent.title || item.name || '';
@@ -1004,6 +1073,104 @@
 
       editorBody.appendChild(section);
     });
+  }
+
+  async function uploadCustomPagePhotos(event, section) {
+    const input = event.target;
+    const files = Array.from(input.files || []);
+
+    if (!files.length) return;
+
+    const pageContent = section._pageContent;
+
+    if (!pageContent || !section.dataset.section) {
+      setStatus('Custom page information is missing.', false);
+      input.value = '';
+      return;
+    }
+
+    if (!editorToken || !publicId) {
+      setStatus('Editor information is missing.', false);
+      input.value = '';
+      return;
+    }
+
+    const photos = pageContent.photos || [];
+
+    if (photos.length + files.length > 20) {
+      setStatus('Maximum of 20 photos per custom page.', false);
+      input.value = '';
+      return;
+    }
+
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp'
+    ];
+
+    for (const file of files) {
+      if (!allowedTypes.includes(file.type)) {
+        setStatus('Only JPG, PNG, and WEBP photos are allowed.', false);
+        input.value = '';
+        return;
+      }
+
+      if (!file.size || file.size > 5 * 1024 * 1024) {
+        setStatus('Each photo must be between 1 byte and 5 MB.', false);
+        input.value = '';
+        return;
+      }
+    }
+
+    const pageId = section.dataset.section.replace(/^custom-/, '');
+
+    input.disabled = true;
+
+    try {
+      const baseUrl = window.SUPABASE_URL.replace(/\/+$/, '');
+
+      for (const file of files) {
+        setStatus('Uploading custom page photo…');
+
+        const formData = new FormData();
+
+        formData.append('edit_token', editorToken);
+        formData.append('file', file);
+        formData.append('upload_type', 'custom_page');
+        formData.append('page_id', pageId);
+
+        const response = await fetch(
+            baseUrl + '/functions/v1/upload-guide-photo',
+            {
+              method: 'POST',
+              headers: {
+                apikey: window.SUPABASE_ANON_KEY
+              },
+              body: formData
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || 'Photo upload failed.');
+        }
+
+        pageContent.photos.push(result.photo_url);
+
+        renderCustomPagePhotos(section, pageContent);
+      }
+
+      setStatus('Custom page photos uploaded successfully ✓');
+
+    } catch (error) {
+      setStatus('Upload error: ' + error.message, false);
+
+    } finally {
+      input.disabled = false;
+      input.value = '';
+    }
   }
 
   /* =========================================================
