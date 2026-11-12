@@ -984,9 +984,11 @@
       section._pageContent = pageContent;
       const photoInput = section.querySelector('[data-page-photo-upload]');
 
-      photoInput.addEventListener('change', function (event) {
-        uploadCustomPagePhotos(event, section);
-      });
+      if (photoInput) {
+        photoInput.addEventListener('change', function (event) {
+          uploadCustomPagePhotos(event, section);
+        });
+      }
 
       section.innerHTML = `
   <h3>Custom Information Page</h3>
