@@ -347,19 +347,19 @@
     }
   }
 
+  const OPTIONAL_GUIDE_PAGES = [
+    { name: 'Amenities', page_id: 'amenities', icon: 'coffee' },
+    { name: 'Pool', page_id: 'pool', icon: 'waves' },
+    { name: 'Activities', page_id: 'activities', icon: 'activity' },
+    { name: 'Outdoor', page_id: 'outdoor', icon: 'trees' },
+    { name: 'Parking', page_id: 'parking', icon: 'car' },
+    { name: 'Emergency', page_id: 'emergency', icon: 'siren' },
+    { name: 'Contact', page_id: 'contact', icon: 'phone' },
+    { name: 'Tutorial', page_id: 'tutorials', icon: 'video' }
+  ];
+
 
   function renderGuestDashboardCustomButtons(buttons) {
-
-    const OPTIONAL_GUIDE_PAGES = [
-      { name: 'Amenities', page_id: 'amenities', icon: 'coffee' },
-      { name: 'Pool', page_id: 'pool', icon: 'waves' },
-      { name: 'Activities', page_id: 'activities', icon: 'activity' },
-      { name: 'Outdoor', page_id: 'outdoor', icon: 'trees' },
-      { name: 'Parking', page_id: 'parking', icon: 'car' },
-      { name: 'Emergency', page_id: 'emergency', icon: 'siren' },
-      { name: 'Contact', page_id: 'contact', icon: 'phone' },
-      { name: 'Tutorial', page_id: 'tutorials', icon: 'video' }
-    ];
 
     const container = document.getElementById(
         'dashboard-custom-buttons'
