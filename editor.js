@@ -903,15 +903,6 @@
       card.querySelector('[data-field="subtitle"]').value = item.subtitle || '';
       card.querySelector('[data-field="icon"]').value = item.icon || 'sparkles';
 
-      card.querySelector('[data-field="destination_type"]').value =
-          item.destination_type || 'custom_info';
-
-      card.querySelector('[data-field="destination_page"]').value =
-          item.destination_page || '';
-
-      card.querySelector('[data-field="external_url"]').value =
-          item.external_url || '';
-
       card.querySelector('[data-field="visible"]').checked =
           item.visible !== false;
 
