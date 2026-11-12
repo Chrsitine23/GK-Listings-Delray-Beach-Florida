@@ -21,6 +21,74 @@ function showPage(pageId) {
 }
 
 
+function openCustomGuestPage(item) {
+  const pageId = item.page_id || item.id;
+
+  if (!pageId) {
+    console.error('Custom page ID is missing.');
+    return;
+  }
+
+  const elementId = 'custom-guide-page-' + pageId;
+  const content = item.page_content || {};
+
+  let page = document.getElementById(elementId);
+
+  if (!page) {
+    page = document.createElement('section');
+    page.id = elementId;
+    page.className = 'page';
+    document.body.appendChild(page);
+  }
+
+  page.innerHTML = '';
+
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = 'max-width:900px;margin:0 auto;padding:24px 20px 40px;';
+
+  const backButton = document.createElement('button');
+  backButton.type = 'button';
+  backButton.textContent = '← Back to Dashboard';
+  backButton.style.cssText = 'padding:10px 16px;margin-bottom:24px;border:1px solid #deded8;border-radius:8px;background:#fff;cursor:pointer;';
+
+  backButton.addEventListener('click', function () {
+    showPage('menu');
+  });
+
+  const title = document.createElement('h2');
+  title.textContent = content.title || item.name || 'Information';
+
+  const description = document.createElement('p');
+  description.textContent = content.description || '';
+  description.style.cssText = 'white-space:pre-wrap;line-height:1.7;';
+
+  wrapper.appendChild(backButton);
+  wrapper.appendChild(title);
+  wrapper.appendChild(description);
+
+  const photos = Array.isArray(content.photos) ? content.photos : [];
+
+  if (photos.length) {
+    const gallery = document.createElement('div');
+    gallery.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:24px;';
+
+    photos.forEach(function (url) {
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = title.textContent;
+      img.style.cssText = 'width:100%;height:180px;object-fit:cover;border-radius:10px;';
+      gallery.appendChild(img);
+    });
+
+    wrapper.appendChild(gallery);
+  }
+
+  page.appendChild(wrapper);
+
+  showPage(elementId);
+}
+
+
 /* =========================================================
    ACKNOWLEDGMENT MODAL
 ========================================================= */

@@ -347,6 +347,7 @@
     }
   }
 
+
   function renderGuestDashboardCustomButtons(buttons) {
     const container = document.getElementById(
         'dashboard-custom-buttons'
@@ -362,7 +363,6 @@
       if (item.visible === false || !item.name) return;
 
       const button = document.createElement('button');
-
       button.type = 'button';
       button.className = 'dash-item';
 
@@ -393,26 +393,7 @@
       button.appendChild(text);
 
       button.addEventListener('click', function () {
-        if (item.destination_type === 'external_link') {
-          if (item.external_url) {
-            window.open(
-                item.external_url,
-                '_blank',
-                'noopener,noreferrer'
-            );
-          }
-          return;
-        }
-
-        if (item.destination_type === 'existing_page') {
-          if (item.destination_page) {
-            showPage(item.destination_page);
-          }
-          return;
-        }
-
-        // Custom Information Page will be connected
-        // in a later step.
+        openCustomGuestPage(item);
       });
 
       container.appendChild(button);
@@ -422,6 +403,7 @@
       window.lucide.createIcons();
     }
   }
+
 
   /* =========================================================
      APPLY GUIDE DATA TO WEBSITE
