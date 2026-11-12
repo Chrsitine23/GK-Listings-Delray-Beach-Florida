@@ -985,8 +985,8 @@
       const photoInput = section.querySelector('[data-page-photo-upload]');
 
       if (photoInput) {
-        photoInput.addEventListener('change', function (event) {
-          uploadCustomPagePhotos(event, section);
+        photoInput.addEventListener('change', async function (event) {
+          await uploadCustomPagePhotos(event, section);
         });
       }
 
