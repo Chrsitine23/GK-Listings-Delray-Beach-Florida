@@ -187,7 +187,7 @@ img {
             rgba(41, 77, 85, 0.12) 40%,
             rgba(41, 77, 85, 0.72) 100%
     ),
-    url('images/Cover.jfif') center / cover no-repeat;
+    url('images/logo.jfif') center / cover no-repeat;
 }
 
 .cover-content {

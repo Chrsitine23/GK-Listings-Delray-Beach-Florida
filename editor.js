@@ -347,6 +347,82 @@
     }
   }
 
+  function renderGuestDashboardCustomButtons(buttons) {
+    const container = document.getElementById(
+        'dashboard-custom-buttons'
+    );
+
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (!Array.isArray(buttons)) return;
+
+    buttons.forEach(function (item) {
+      if (item.visible === false || !item.name) return;
+
+      const button = document.createElement('button');
+
+      button.type = 'button';
+      button.className = 'dash-item';
+
+      const icon = document.createElement('span');
+      icon.className = 'dash-icon';
+
+      const iconElement = document.createElement('i');
+      iconElement.setAttribute(
+          'data-lucide',
+          item.icon || 'sparkles'
+      );
+
+      icon.appendChild(iconElement);
+
+      const text = document.createElement('span');
+      text.className = 'dash-text';
+
+      const name = document.createElement('strong');
+      name.textContent = item.name;
+
+      const subtitle = document.createElement('small');
+      subtitle.textContent = item.subtitle || '';
+
+      text.appendChild(name);
+      text.appendChild(subtitle);
+
+      button.appendChild(icon);
+      button.appendChild(text);
+
+      button.addEventListener('click', function () {
+        if (item.destination_type === 'external_link') {
+          if (item.external_url) {
+            window.open(
+                item.external_url,
+                '_blank',
+                'noopener,noreferrer'
+            );
+          }
+          return;
+        }
+
+        if (item.destination_type === 'existing_page') {
+          if (item.destination_page) {
+            showPage(item.destination_page);
+          }
+          return;
+        }
+
+        // Custom Information Page will be connected
+        // in a later step.
+      });
+
+      container.appendChild(button);
+    });
+
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  }
+
   /* =========================================================
      APPLY GUIDE DATA TO WEBSITE
   ========================================================= */
@@ -364,6 +440,10 @@
 
     // DASHBOARD SETTINGS
     const dashboard = g.guide_data?.dashboard || {};
+
+    renderGuestDashboardCustomButtons(
+        dashboard.custom_buttons || []
+    );
 
     renderDashboardCustomButtons(
         dashboard.custom_buttons || []
