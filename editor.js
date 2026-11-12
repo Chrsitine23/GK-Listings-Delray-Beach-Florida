@@ -754,8 +754,31 @@
     return Array.from(
         container.querySelectorAll('.dashboard-custom-card')
     ).map(function (card) {
+
+      const pageSection = Array.from(
+          document.querySelectorAll('[data-custom-page-section]')
+      ).find(function (section) {
+        return section.dataset.section ===
+            'custom-' + card.dataset.pageId;
+      });
+
+      const previousPageContent = card.pageContent || {};
+
+      const pageContent = {
+        ...previousPageContent,
+
+        title: pageSection
+            ? pageSection.querySelector('[data-page-field="title"]')?.value.trim() || ''
+            : previousPageContent.title || '',
+
+        description: pageSection
+            ? pageSection.querySelector('[data-page-field="description"]')?.value.trim() || ''
+            : previousPageContent.description || ''
+      };
+
       return {
-        id: card.dataset.buttonId || crypto.randomUUID(),
+        id: card.dataset.buttonId,
+        page_id: card.dataset.pageId,
 
         name: card.querySelector('[data-field="name"]')?.value.trim() || '',
 
@@ -763,13 +786,9 @@
 
         icon: card.querySelector('[data-field="icon"]')?.value.trim() || 'sparkles',
 
-        destination_type: card.querySelector('[data-field="destination_type"]')?.value || 'custom_info',
+        visible: card.querySelector('[data-field="visible"]')?.checked ?? true,
 
-        destination_page: card.querySelector('[data-field="destination_page"]')?.value || '',
-
-        external_url: card.querySelector('[data-field="external_url"]')?.value.trim() || '',
-
-        visible: card.querySelector('[data-field="visible"]')?.checked ?? true
+        page_content: pageContent
       };
     });
   }
@@ -794,6 +813,23 @@
 
       card.className = 'dashboard-custom-card';
       card.dataset.buttonId = item.id || crypto.randomUUID();
+
+      const pageId =
+          item.page_id || item.id || crypto.randomUUID();
+
+      card.dataset.pageId = pageId;
+
+      if (!item.page_id) {
+        item.page_id = pageId;
+      }
+
+      card.pageContent = item.page_content || {
+        title: '',
+        description: '',
+        photos: [],
+        information_fields: [],
+        buttons: []
+      };
 
       card.style.cssText = `
       border:1px solid #deded8;
@@ -832,41 +868,6 @@
           placeholder="sparkles" value="">
       </label>
 
-      <label>
-        Destination Type
-        <select data-field="destination_type">
-          <option value="custom_info">Custom Information Page</option>
-          <option value="existing_page">Existing Guide Page</option>
-          <option value="external_link">External Link</option>
-        </select>
-      </label>
-
-      <label>
-        Existing Guide Page
-        <select data-field="destination_page">
-          <option value="">Choose a page</option>
-          <option value="welcome">Welcome</option>
-          <option value="checkin">Check In</option>
-          <option value="checkout">Check Out</option>
-          <option value="location">Location</option>
-          <option value="wifi">WiFi</option>
-          <option value="amenities">Amenities</option>
-          <option value="pool">Pool</option>
-          <option value="activities">Activities</option>
-          <option value="rules">House Rules</option>
-          <option value="outdoor">Outdoor</option>
-          <option value="parking">Parking</option>
-          <option value="emergency">Emergency</option>
-          <option value="contact">Contact</option>
-        </select>
-      </label>
-
-      <label>
-        External URL
-        <input data-field="external_url" type="url"
-          placeholder="https://example.com" value="">
-      </label>
-
       <label style="display:flex;align-items:center;gap:8px;">
         <input data-field="visible" type="checkbox" checked>
         Show this button on the guest dashboard
@@ -874,6 +875,31 @@
     `;
 
       card.querySelector('[data-field="name"]').value = item.name || '';
+
+      card.querySelector('[data-field="name"]').addEventListener('input', function () {
+        const pageId = card.dataset.pageId;
+
+        const tab = document.querySelector(
+            '[data-tab="custom-' + pageId + '"]'
+        );
+
+        const pageSection = document.querySelector(
+            '[data-section="custom-' + pageId + '"]'
+        );
+
+        if (tab) {
+          tab.textContent = this.value.trim() || 'New Page';
+        }
+
+        if (pageSection) {
+          const heading = pageSection.querySelector('h3');
+
+          if (heading) {
+            heading.textContent = this.value.trim() || 'New Page';
+          }
+        }
+      });
+
       card.querySelector('[data-field="subtitle"]').value = item.subtitle || '';
       card.querySelector('[data-field="icon"]').value = item.icon || 'sparkles';
 
@@ -890,6 +916,102 @@
           item.visible !== false;
 
       container.appendChild(card);
+    });
+
+    renderCustomPageTabs(buttons);
+  }
+
+  function renderCustomPageTabs(buttons) {
+    const tabBar = document.querySelector('.editor-tabs');
+    const editorBody = document.querySelector('.editor-body');
+
+    if (!tabBar || !editorBody) return;
+
+    // Remove previously generated custom tabs
+    tabBar.querySelectorAll('[data-custom-page-tab]').forEach(function (tab) {
+      tab.remove();
+    });
+
+    // Remove previously generated custom sections
+    editorBody.querySelectorAll('[data-custom-page-section]').forEach(function (section) {
+      section.remove();
+    });
+
+    (buttons || []).forEach(function (item) {
+      const pageId = item.page_id || item.id;
+      const tabId = 'custom-' + pageId;
+
+      // Create editor tab
+      const tab = document.createElement('button');
+
+      tab.type = 'button';
+      tab.className = 'editor-tab';
+      tab.dataset.tab = tabId;
+      tab.dataset.customPageTab = 'true';
+      tab.textContent = item.name || 'New Page';
+
+      tab.addEventListener('click', function () {
+        const tabId = tab.dataset.tab;
+
+        tabBar.querySelectorAll('.editor-tab').forEach(function (btn) {
+          btn.classList.remove('active');
+        });
+
+        editorBody.querySelectorAll('.editor-section').forEach(function (section) {
+          section.classList.remove('active');
+        });
+
+        tab.classList.add('active');
+
+        const targetSection = editorBody.querySelector(
+            '[data-section="' + tabId + '"]'
+        );
+
+        if (targetSection) {
+          targetSection.classList.add('active');
+        }
+      });
+
+      tabBar.appendChild(tab);
+
+      // Create matching editor section
+      const section = document.createElement('div');
+
+      section.className = 'editor-section';
+      section.dataset.section = tabId;
+      section.dataset.customPageSection = 'true';
+
+      const pageContent = item.page_content || {};
+
+      section.innerHTML = `
+  <h3>Custom Information Page</h3>
+
+  <label>
+    Page Title
+    <input
+      type="text"
+      data-page-field="title"
+      placeholder="Example: Swimming Pool"
+    >
+  </label>
+
+  <label>
+    Description / Information
+    <textarea
+      data-page-field="description"
+      rows="6"
+      placeholder="Add helpful information for your guests..."
+    ></textarea>
+  </label>
+`;
+
+      section.querySelector('[data-page-field="title"]').value =
+          pageContent.title || item.name || '';
+
+      section.querySelector('[data-page-field="description"]').value =
+          pageContent.description || '';
+
+      editorBody.appendChild(section);
     });
   }
 
@@ -1432,15 +1554,24 @@
         .addEventListener('click', function () {
           const buttons = getDashboardCustomButtonsFromEditor();
 
+          const newButtonId = crypto.randomUUID();
+
           buttons.push({
-            id: crypto.randomUUID(),
+            id: newButtonId,
+            page_id: newButtonId,
+
             name: '',
             subtitle: '',
             icon: 'sparkles',
-            destination_type: 'custom_info',
-            destination_page: '',
-            external_url: '',
-            visible: true
+            visible: true,
+
+            page_content: {
+              title: '',
+              description: '',
+              photos: [],
+              information_fields: [],
+              buttons: []
+            }
           });
 
           renderDashboardCustomButtons(buttons);
@@ -1503,6 +1634,16 @@
               function () {
 
                 const tab = button.dataset.tab;
+
+                if (tab.startsWith('custom-')) {
+                  const customSection = panel.querySelector(
+                      '[data-section="' + tab + '"]'
+                  );
+
+                  if (customSection) {
+                    // Custom page section will be activated below.
+                  }
+                }
 
                 panel
                     .querySelectorAll('.editor-tab')
