@@ -44,7 +44,7 @@ function openCustomGuestPage(item) {
   page.innerHTML = '';
 
   const wrapper = document.createElement('div');
-  wrapper.style.cssText = 'max-width:900px;margin:0 auto;padding:24px 20px 40px;';
+  wrapper.style.cssText = 'max-width:900px;margin:0 auto;padding:0 20px 40px;';
 
   const backButton = document.createElement('button');
   backButton.type = 'button';
