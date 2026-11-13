@@ -1600,42 +1600,7 @@
         });
 
     // DELETE, MOVE UP, MOVE DOWN
-    document.getElementById('e-dashboard-custom-buttons')
-        .addEventListener('click', function (event) {
-          const button = event.target.closest('[data-action]');
 
-          if (!button) return;
-
-          const card = button.closest('.dashboard-custom-card');
-
-          if (!card) return;
-
-          const buttons = getDashboardCustomButtonsFromEditor();
-
-          const index = buttons.findIndex(function (item) {
-            return item.id === card.dataset.buttonId;
-          });
-
-          if (index < 0) return;
-
-          const action = button.dataset.action;
-
-          if (action === 'delete') {
-            buttons.splice(index, 1);
-          }
-
-          if (action === 'up' && index > 0) {
-            const item = buttons.splice(index, 1)[0];
-            buttons.splice(index - 1, 0, item);
-          }
-
-          if (action === 'down' && index < buttons.length - 1) {
-            const item = buttons.splice(index, 1)[0];
-            buttons.splice(index + 1, 0, item);
-          }
-
-          renderDashboardCustomButtons(buttons);
-        });
 
     updateEditorFields(guide);
     renderOpeningCoverPreview();
