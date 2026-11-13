@@ -1571,34 +1571,6 @@
         guide?.guide_data?.dashboard?.custom_buttons || []
     );
 
-    // ADD CUSTOM BUTTON
-    document.getElementById('e-dashboard-add-button')
-        .addEventListener('click', function () {
-          const buttons = getDashboardCustomButtonsFromEditor();
-
-          const newButtonId = crypto.randomUUID();
-
-          buttons.push({
-            id: newButtonId,
-            page_id: newButtonId,
-
-            name: '',
-            subtitle: '',
-            icon: 'sparkles',
-            visible: true,
-
-            page_content: {
-              title: '',
-              description: '',
-              photos: [],
-              information_fields: [],
-              buttons: []
-            }
-          });
-
-          renderDashboardCustomButtons(buttons);
-        });
-
     // DELETE, MOVE UP, MOVE DOWN
 
 
