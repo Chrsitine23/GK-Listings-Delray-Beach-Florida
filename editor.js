@@ -1317,32 +1317,6 @@
             ></textarea>
           </label>
         
-          <hr>
-        
-          <h3>Custom Guide Buttons</h3>
-        
-          <p>
-            Add extra sections to your guest dashboard, such as SPA,
-            Gym, Basketball Court, or other property facilities.
-          </p>
-        
-          <div id="e-dashboard-custom-buttons">
-            No custom buttons added yet.
-          </div>
-        
-          <button
-            id="e-dashboard-add-button"
-            type="button"
-            class="secondary-action"
-          >
-            + Add Custom Button
-          </button>
-        
-          <p>
-            You can customize each button's name, subtitle, icon,
-            destination, visibility, and order.
-          </p>
-        
           <p class="ack-editor-note">
             Remember to click Save Changes after editing your dashboard.
           </p>
