@@ -437,13 +437,7 @@
     // DASHBOARD SETTINGS
     const dashboard = g.guide_data?.dashboard || {};
 
-    renderGuestDashboardCustomButtons(
-        dashboard.custom_buttons || []
-    );
-
-    renderDashboardCustomButtons(
-        dashboard.custom_buttons || []
-    );
+    updateOptionalDashboardPages(g.guide_data || {});
 
     setText(
         'dashboard-eyebrow',
@@ -791,14 +785,37 @@
   }
 
 
-  function renderDashboardCustomButtons(buttons) {
-    const container = document.getElementById(
-        'e-dashboard-custom-buttons'
-    );
+  function renderPageLibrary() {
+    const container = document.getElementById('e-page-library');
 
     if (!container) return;
 
+    const enabledPages =
+        guide?.guide_data?.dashboard?.enabled_pages || [];
+
     container.innerHTML = '';
+
+    OPTIONAL_GUIDE_PAGES.forEach(function (page) {
+      const label = document.createElement('label');
+
+      label.style.cssText =
+          'display:flex;align-items:center;gap:10px;margin:12px 0;';
+
+      const checkbox = document.createElement('input');
+
+      checkbox.type = 'checkbox';
+      checkbox.value = page.page_id;
+      checkbox.checked = enabledPages.includes(page.page_id);
+      checkbox.dataset.pageId = page.page_id;
+
+      const text = document.createElement('span');
+      text.textContent = page.name;
+
+      label.appendChild(checkbox);
+      label.appendChild(text);
+
+      container.appendChild(label);
+    });
   }
 
   function renderCustomPageTabs(buttons) {
@@ -1316,6 +1333,16 @@
               placeholder="Everything you need for a comfortable stay."
             ></textarea>
           </label>
+          
+          <hr>
+          
+          <h3>Dashboard Page Library</h3>
+          
+          <p>
+            Choose which additional pages you want guests to see on your dashboard.
+          </p>
+          
+          <div id="e-page-library"></div>
         
           <p class="ack-editor-note">
             Remember to click Save Changes after editing your dashboard.
@@ -1565,11 +1592,8 @@
 
     document.body.appendChild(panel);
 
+    renderPageLibrary();
 
-    // INITIALIZE CUSTOM DASHBOARD BUTTONS
-    renderDashboardCustomButtons(
-        guide?.guide_data?.dashboard?.custom_buttons || []
-    );
 
     // DELETE, MOVE UP, MOVE DOWN
 
@@ -2492,13 +2516,14 @@
           document.getElementById('e-dashboard-subtitle')?.value.trim()
           || '',
 
-      custom_buttons: getDashboardCustomButtonsFromEditor()
+      enabled_pages: Array.from(
+          document.querySelectorAll(
+              '#e-page-library input[type="checkbox"]:checked'
+          )
+      ).map(function (checkbox) {
+        return checkbox.dataset.pageId;
+      })
     };
-
-    console.log(
-        'CUSTOM BUTTONS BEING SAVED:',
-        dashboard.custom_buttons
-    );
 
 
     // OPENING SETTINGS

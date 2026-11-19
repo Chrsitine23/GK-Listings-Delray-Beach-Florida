@@ -98,22 +98,80 @@
                 </div>
 
                 <nav class="dashboard-menu" aria-label="Guest guide menu">
-                    <button class="dash-item dash-featured" onclick="showPage('welcome')"><span class="dash-icon"><i data-lucide="sparkles"></i></span><span class="dash-text"><strong>Welcome</strong><small>Start here</small></span><i data-lucide="arrow-up-right" class="dash-arrow"></i></button>
-                    <button class="dash-item" onclick="showPage('checkin')"><span class="dash-icon"><i data-lucide="key-round"></i></span><span class="dash-text"><strong>Check In</strong><small>Arrival</small></span></button>
-                    <button class="dash-item" onclick="showPage('checkout')"><span class="dash-icon"><i data-lucide="door-open"></i></span><span class="dash-text"><strong>Check Out</strong><small>Before leaving</small></span></button>
-                    <button class="dash-item" onclick="showPage('location')"><span class="dash-icon"><i data-lucide="map-pin"></i></span><span class="dash-text"><strong>Location</strong><small>Find your way</small></span></button>
-                    <button class="dash-item" onclick="showPage('wifi')"><span class="dash-icon"><i data-lucide="wifi"></i></span><span class="dash-text"><strong>WiFi</strong><small>Stay connected</small></span></button>
-                    <button class="dash-item" onclick="showPage('amenities')"><span class="dash-icon"><i data-lucide="lamp"></i></span><span class="dash-text"><strong>Amenities</strong><small>What's inside</small></span></button>
-                    <button class="dash-item" onclick="showPage('pool')"><span class="dash-icon"><i data-lucide="waves"></i></span><span class="dash-text"><strong>Pool</strong><small>Swim & relax</small></span></button>
-                    <button class="dash-item" onclick="showPage('activities')"><span class="dash-icon"><i data-lucide="compass"></i></span><span class="dash-text"><strong>Activities</strong><small>Explore Delray</small></span></button>
-                    <button class="dash-item" onclick="showPage('rules')"><span class="dash-icon"><i data-lucide="shield-check"></i></span><span class="dash-text"><strong>House Rules</strong><small>Good to know</small></span></button>
-                    <button class="dash-item" onclick="showPage('outdoor')"><span class="dash-icon"><i data-lucide="trees"></i></span><span class="dash-text"><strong>Outdoor</strong><small>Grill & Lawn</small></span></button>
-                    <button class="dash-item" onclick="showPage('parking')"><span class="dash-icon"><i data-lucide="car"></i></span><span class="dash-text"><strong>Parking</strong><small>Private</small></span></button>
-                    <button class="dash-item" onclick="showPage('emergency')"><span class="dash-icon"><i data-lucide="siren"></i></span><span class="dash-text"><strong>Emergency</strong><small>Need help?</small></span></button>
-                    <button class="dash-item" onclick="showPage('contact')"><span class="dash-icon"><i data-lucide="message-circle"></i></span><span class="dash-text"><strong>Contact</strong><small>Message us</small></span></button>
-                    <!-- CUSTOM DASHBOARD BUTTONS -->
+
+                    <!-- DEFAULT PAGES -->
+                    <button class="dash-item dash-featured" onclick="showPage('welcome')">
+                        <span class="dash-icon"><i data-lucide="sparkles"></i></span>
+                        <span class="dash-text"><strong>Welcome</strong><small>Start here</small></span>
+                        <i data-lucide="arrow-up-right" class="dash-arrow"></i>
+                    </button>
+
+                    <button class="dash-item" onclick="showPage('checkin')">
+                        <span class="dash-icon"><i data-lucide="key-round"></i></span>
+                        <span class="dash-text"><strong>Check In</strong><small>Arrival</small></span>
+                    </button>
+
+                    <button class="dash-item" onclick="showPage('checkout')">
+                        <span class="dash-icon"><i data-lucide="door-open"></i></span>
+                        <span class="dash-text"><strong>Check Out</strong><small>Before leaving</small></span>
+                    </button>
+
+                    <button class="dash-item" onclick="showPage('location')">
+                        <span class="dash-icon"><i data-lucide="map-pin"></i></span>
+                        <span class="dash-text"><strong>Location</strong><small>Find your way</small></span>
+                    </button>
+
+                    <button class="dash-item" onclick="showPage('wifi')">
+                        <span class="dash-icon"><i data-lucide="wifi"></i></span>
+                        <span class="dash-text"><strong>WiFi</strong><small>Stay connected</small></span>
+                    </button>
+
+                    <button class="dash-item" onclick="showPage('rules')">
+                        <span class="dash-icon"><i data-lucide="shield-check"></i></span>
+                        <span class="dash-text"><strong>House Rules</strong><small>Good to know</small></span>
+                    </button>
+
+
+                    <!-- OPTIONAL PAGES -->
+                    <button class="dash-item" data-optional-page="amenities" onclick="showPage('amenities')">
+                        <span class="dash-icon"><i data-lucide="lamp"></i></span>
+                        <span class="dash-text"><strong>Amenities</strong><small>What's inside</small></span>
+                    </button>
+
+                    <button class="dash-item" data-optional-page="pool" onclick="showPage('pool')">
+                        <span class="dash-icon"><i data-lucide="waves"></i></span>
+                        <span class="dash-text"><strong>Pool</strong><small>Swim & relax</small></span>
+                    </button>
+
+                    <button class="dash-item" data-optional-page="activities" onclick="showPage('activities')">
+                        <span class="dash-icon"><i data-lucide="compass"></i></span>
+                        <span class="dash-text"><strong>Activities</strong><small>Explore Delray</small></span>
+                    </button>
+
+                    <button class="dash-item" data-optional-page="outdoor" onclick="showPage('outdoor')">
+                        <span class="dash-icon"><i data-lucide="trees"></i></span>
+                        <span class="dash-text"><strong>Outdoor</strong><small>Grill & Lawn</small></span>
+                    </button>
+
+                    <button class="dash-item" data-optional-page="parking" onclick="showPage('parking')">
+                        <span class="dash-icon"><i data-lucide="car"></i></span>
+                        <span class="dash-text"><strong>Parking</strong><small>Private</small></span>
+                    </button>
+
+                    <button class="dash-item" data-optional-page="emergency" onclick="showPage('emergency')">
+                        <span class="dash-icon"><i data-lucide="siren"></i></span>
+                        <span class="dash-text"><strong>Emergency</strong><small>Need help?</small></span>
+                    </button>
+
+                    <button class="dash-item" data-optional-page="contact" onclick="showPage('contact')">
+                        <span class="dash-icon"><i data-lucide="message-circle"></i></span>
+                        <span class="dash-text"><strong>Contact</strong><small>Message us</small></span>
+                    </button>
+
                     <div id="dashboard-custom-buttons" style="display:none;"></div>
+
                 </nav>
+
                 <p class="dashboard-footer">Made with care for your stay <span>•</span> GK Listings - Delray Beach, Florida</p>
             </main>
         </div>
@@ -641,8 +699,7 @@
                             Please let us know at least <strong>24 hours before</strong> your stay.
                         </li>
                         <li>
-                            Early check-in (before 4:00 PM) can be requested in advance.
-                            A <strong>$35 fee</strong> applies and early check-in is <strong>not guaranteed</strong>.
+                            If you would like an early check-in at <strong>4:00 PM</strong> and/or a late check-out at <strong>12:00 PM</strong>, is subject to availability based on our cleaning schedule. Please message us through the platform at least 24 hours in advance.
                         </li>
                         <li>
                             Need extra towels during your stay? Just let us know and we’ll provide them.
@@ -823,8 +880,7 @@
                                 <strong>Check-out:</strong> 11:00 AM
                             </p>
                             <p>
-                                Early check-in (3:00 PM) or late check-out (12:00 PM) may be available.
-                                Please request at least <strong>48 hours in advance</strong> and pay the <strong>$35 fee</strong> via the platform for authorization.
+                                If you would like an early check-in at <strong>4:00 PM</strong> and/or a late check-out at <strong>12:00 PM</strong>, is subject to availability based on our cleaning schedule. Please message us through the platform at least 24 hours in advance.
                             </p>
                         </div>
                     </li>
@@ -847,8 +903,8 @@
                         <div>
                             <strong>No Smoking</strong>
                             <p>
-                                No smoking, vaping, e-cigarettes, or hookah inside the home.
-                                Violation will result in a <strong>$1,000 fee</strong> to de-smoke the property.
+                                No. Smoking, vaping, e-cigarettes, hookah, and drugs are strictly prohibited inside the home and anywhere on the property.</p>
+                            <p class="faq-warning">Any evidence of smoking or odor remediation required after checkout will be documented and submitted through the booking platform for actual professional cleaning and de-smoking costs.
                             </p>
                         </div>
                     </li>
@@ -910,18 +966,6 @@
                             <strong>Missing or Damaged Items</strong>
                             <p>
                                 Any missing or damaged items will be charged at retail cost through the booking platform.
-                            </p>
-                        </div>
-                    </li>
-
-                    <!-- Security Deposit -->
-                    <li>
-                        <i data-lucide="shield" class="rule-icon"></i>
-                        <div>
-                            <strong>Security Deposit</strong>
-                            <p>
-                                • Stays under 28 nights: <strong>$300</strong> security deposit<br>
-                                • Stays 28 nights or longer: <strong>$500</strong> security deposit + <strong>$100/month</strong> cleaning fee
                             </p>
                         </div>
                     </li>

@@ -20,6 +20,19 @@ function showPage(pageId) {
   }
 }
 
+function updateOptionalDashboardPages(guideData) {
+  const enabledPages =
+      guideData?.dashboard?.enabled_pages || [];
+
+  document.querySelectorAll('[data-optional-page]').forEach(function (button) {
+    const pageId = button.dataset.optionalPage;
+
+    button.style.display = enabledPages.includes(pageId)
+        ? ''
+        : 'none';
+  });
+}
+
 
 function openCustomGuestPage(item) {
   const pageId = item.page_id || item.id;
